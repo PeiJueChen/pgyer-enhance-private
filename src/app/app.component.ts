@@ -10,8 +10,7 @@ import { AppDataService } from '../services/app-data.service';
 export class AppComponent {
 
   password = "";
-  // showPasswordForm = false;
-  showPasswordForm = true;
+  showPasswordForm = false;
   href;
   constructor(private dataService: DataService, public appDataService: AppDataService) {
     this.href = decodeURIComponent(window.location.href);
