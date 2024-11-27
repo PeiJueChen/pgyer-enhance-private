@@ -1,3 +1,3 @@
 rm -rf dist
 echo "Building..."
-npm run build
+ng build --configuration production

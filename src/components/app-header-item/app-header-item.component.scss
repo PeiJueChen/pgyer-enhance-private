@@ -1,0 +1,144 @@
+:host {
+  overflow-x: hidden;
+}
+.app-header-item {
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 10px;
+  border-bottom: 1px #ddd solid;
+
+  .icon {
+    width: 7rem;
+    height: 7rem;
+  }
+
+  .icon img {
+    width: 100%;
+    height: auto;
+  }
+
+  .name {
+    font-size: 1.6rem;
+    margin: 15px 0;
+    color: gray;
+  }
+
+  .device-name-container {
+    display: flex;
+    /* Use flexbox for layout */
+    align-items: center;
+
+    /* Center items vertically */
+    .platform-icon {
+      width: 20px;
+      /* Set icon width */
+      height: 20px;
+      /* Set icon height */
+      margin-right: 5px;
+      /* Add margin to the right */
+    }
+
+    .device-name {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+
+
+
+  .qrcode {
+    margin-top: 1rem;
+  }
+
+  .install-button {
+    margin-top: 2rem;
+    font-size: 1.3rem;
+    padding: 0.7rem 5rem;
+    background-color: #1abc9c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+      background-color: #16a085;
+    }
+
+    &.stay {
+      padding: 0.7rem 4rem;
+    }
+  }
+
+  .info-container {
+    margin: 20px;
+    width: 100%;
+    text-align: start;
+  }
+
+  .info-title {
+    font-size: 18px;
+    /* Set font size for title */
+    margin-bottom: 10px;
+    /* Add bottom margin */
+  }
+
+  .info-list {
+    display: flex;
+    /* Use flexbox for layout */
+    flex-direction: column;
+    /* Arrange items in a column */
+  }
+
+  .info-item {
+    border-bottom: 1px #ddd solid;
+    display: flex;
+    /* Use flexbox for item layout */
+    justify-content: space-between;
+    /* Space between label and value */
+    margin-bottom: 8px;
+    /* Add spacing between items */
+    padding: 5px 0;
+    /* Add some padding */
+  }
+
+  .info-item span {
+    font-size: 14px;
+    /* Set font size */
+    color: #333;
+    /* Text color */
+  }
+
+  .info-item span:last-child {
+    font-weight: bold;
+    /* Make the value bold */
+  }
+
+
+  .news {
+    width: 100%;
+    text-align: start;
+    margin: 0;
+    margin-bottom: 1.5rem;
+
+    p {
+      margin-top: 0.5rem;
+    }
+
+    span {
+      color: gray;
+    }
+  }
+}

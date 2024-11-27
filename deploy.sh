@@ -1,5 +1,5 @@
 rm -rf dist
 echo "Building..."
-npm run build
+ng build --configuration production
 echo "Deploying..."
 firebase deploy

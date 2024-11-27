@@ -1,0 +1,161 @@
+* {
+  box-sizing: border-box;
+  /* Ensure padding and border are included in the element's total width and height */
+}
+
+body {
+  margin: 0;
+  /* Remove default body margin */
+  font-family: Arial, sans-serif;
+  /* Set font family */
+}
+
+.container {
+  overflow-x: hidden;
+  display: flex;
+  /* Use flexbox for layout */
+  justify-content: center;
+  /* Center content horizontally */
+  align-items: center;
+  /* Center content vertically */
+  height: 100vh;
+  /* Make container fill the viewport height */
+  // width: 100vw;
+  background-color: white;
+  position: relative;
+
+  .header-logo {
+    position: absolute;
+    /* Use absolute positioning */
+    top: 0;
+    width: 6rem;
+    left: 0;
+    /* Center horizontally */
+    /* Center adjustment */
+    /* Make the logo responsive */
+    height: auto;
+    /* Maintain aspect ratio */
+    z-index: 1000;
+    /* Ensure it is above other elements */
+  }
+
+  /* Set background color */
+  .content {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    .app-list {
+      width: 100%;
+      height: 100%;
+    }
+
+
+  }
+}
+
+.pwd-container {
+  width: 100%;
+  margin: 2rem;
+  /* Set maximum width */
+  padding: 30px;
+  padding-top: 0;
+  /* Add padding */
+  border-radius: 8px;
+  /* Add rounded corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  /* Add shadow effect */
+  background-color: white;
+  /* Set background color to white */
+  max-width: 600px;
+  .error-message {
+    color: #e74c3c;
+    /* Set error message color to red */
+    font-size: 14px;
+    /* Set font size for error message */
+    margin-top: 5px;
+    /* Add margin to separate from input */
+  }
+
+
+  h2 {
+    text-align: center;
+    /* Center the title */
+    margin-bottom: 20px;
+    /* Add bottom margin */
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+    margin-top: 2rem;
+  }
+
+  .form-control {
+    width: 100%;
+    /* Input field takes full width */
+    padding: 10px;
+    /* Add padding */
+    border: 1px solid #ccc;
+    /* Set border color */
+    border-radius: 4px;
+    /* Add rounded corners */
+    font-size: 16px;
+    /* Set font size */
+  }
+
+  .btn {
+    width: 100%;
+    /* Button takes full width */
+    padding: 10px;
+    /* Add padding */
+    border: none;
+    /* Remove border */
+    border-radius: 4px;
+    /* Add rounded corners */
+    background-color: #16a085;
+    /* Set button background color */
+    color: white;
+    /* Set button text color */
+    font-size: 16px;
+    /* Set font size */
+    cursor: pointer;
+    /* Change cursor on hover */
+    transition: background-color 0.3s;
+    /* Add transition effect for button background color */
+  }
+
+  .btn:hover {
+    background-color: #16a085;
+    /* Change background color on hover */
+  }
+
+  .is-invalid {
+    border-color: #e74c3c;
+    /* Change input border color to red when invalid */
+  }
+
+  .submit-button {
+    background-color: #16a085;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+
+    &:active {
+      background-color: #004085;
+      transform: translateY(1px);
+    }
+
+    &:disabled {
+      background-color: #c0c0c0;
+      cursor: not-allowed;
+    }
+  }
+
+}

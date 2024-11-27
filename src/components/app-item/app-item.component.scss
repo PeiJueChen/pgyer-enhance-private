@@ -1,0 +1,157 @@
+:host {
+  overflow-x: hidden;
+}
+.container {
+  padding-bottom: 1rem;
+  overflow-x: hidden;
+}
+
+.app-name {
+  margin: 1rem;
+  padding-bottom: 1rem;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  margin: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+
+  .item-header {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+
+    .item-icon {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+    }
+
+    .item-info {
+      flex-grow: 1;
+
+      .item-name {
+        font-size: 18px;
+        margin: 0;
+      }
+
+      .item-version,
+      .item-build-version,
+      .item-date {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #666;
+      }
+    }
+  }
+
+  .item-details {
+    display: flex;
+    /* Use flexbox for layout */
+    justify-content: space-between;
+    /* Space between text and button */
+    align-items: center;
+    /* Center items vertically */
+    margin-top: 10px;
+    /* Add margin on top */
+    padding: 10px;
+    /* Add padding */
+    background-color: #f9f9f9;
+    /* Background color */
+    border-top: 1px solid #ddd;
+    /* Border for separation */
+
+    div {
+      flex-grow: 1;
+      /* Allow the div to take up available space */
+      margin-right: 10px;
+      /* Add right margin to space from button */
+
+      p {
+        font-weight: bold;
+        /* Make the update text bold */
+        margin: 0;
+        /* Remove default margins */
+      }
+
+      span {
+        font-size: 14px;
+        /* Set the font size for the description */
+        color: #666;
+        /* Set the text color */
+      }
+    }
+
+    .install-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #1abc9c;
+      /* Button background color */
+      color: white;
+      /* Button text color */
+      border: none;
+      /* Remove border */
+      border-radius: 4px;
+      /* Rounded corners */
+      cursor: pointer;
+      /* Pointer cursor on hover */
+      transition: background-color 0.3s;
+      /* Transition effect */
+      padding: 1rem 2rem;
+      font-size: 1rem;
+
+      &:hover {
+        background-color: #16a085;
+        /* Darker shade on hover */
+      }
+
+      &.stay {
+        padding: 0.5rem 1rem;
+      }
+    }
+  }
+
+}
+
+
+.all-versions-button-container {
+  display: flex;
+  /* Use flexbox for centering */
+  justify-content: center;
+  /* Center the button */
+  margin-top: 20px;
+  /* Add top margin */
+}
+
+.all-versions-button {
+  width: 100%;
+  padding: 0.8rem;
+  margin: 0 1rem;
+  font-size: 1rem;
+  padding: 10px 20px;
+  /* Add padding */
+  background-color: #1abc9c;
+  /* Button background color */
+  color: white;
+  /* Button text color */
+  border: none;
+  /* Remove border */
+  border-radius: 4px;
+  /* Rounded corners */
+  cursor: pointer;
+  /* Pointer cursor on hover */
+  transition: background-color 0.3s;
+  /* Transition effect */
+  background: #fff;
+  color: #1abc9c;
+  border: 1px solid #1abc9c;
+
+  &:hover {
+    background-color: #16a085;
+    /* Darker shade on hover */
+  }
+}
