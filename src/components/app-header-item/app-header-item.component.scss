@@ -101,11 +101,29 @@
     }
   }
 
-
-
-
   .qrcode {
     margin-top: 1rem;
+    position: relative;
+    /* Set to relative to position child elements absolutely */
+    display: inline-block;
+    /* Ensures the size is based on content */
+  }
+
+  .qr-logo {
+    position: absolute;
+    /* Position the logo absolutely within the qrcode */
+    top: 50%;
+    /* Center vertically */
+    left: 50%;
+    /* Center horizontally */
+    transform: translate(-50%, -50%);
+    /* Adjust position */
+    width: 2.4rem;
+    /* Set logo width */
+    height: auto;
+    /* Maintain aspect ratio */
+    z-index: 10;
+    /* Make sure the logo is above the QR code */
   }
 
   .install-button {
