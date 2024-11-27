@@ -74,8 +74,10 @@ export class AppComponent {
       return "";
     }
     const envStr = getEnvString(this.appDataService.env);
+    let realIcon = "";
     const realVerions = versions.filter(version => {
-      version.realIcon = `https://www.pgyer.com/image/view/app_icons/${version.buildIcon}`;
+      version.realIcon = realIcon || `https://www.pgyer.com/image/view/app_icons/${version.buildIcon}`;
+      realIcon = version.realIcon;
       return (version?.buildUpdateDescription || UAT_ENV).includes(envStr)
     })
     this.appDataService.realVerions = realVerions;

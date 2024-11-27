@@ -32,4 +32,8 @@ export class AppHeaderItemComponent implements OnInit {
     this.item.isDownloading = true;
     window.open(url, '_blank');
   }
+
+  retryDownload() {
+    window.open(this.appDataService.pgyerOriginalLink, '_blank');
+  }
 }

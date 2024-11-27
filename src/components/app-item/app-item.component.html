@@ -5,14 +5,14 @@
       <img [src]="item?.realIcon || 'https://www.pgyer.com/image/view/app_icons/'+item.buildIcon"class="item-icon" />
 
       <div class="item-info">
-        <h3 class="item-name">{{ item.buildName }}</h3>
-        <p class="item-version">Version: {{ item.buildVersion }} (Build:{{ item.buildBuildVersion }})   {{item.buildCreated | dateFormat}}</p>
+        <h6 class="item-name">{{ item.buildName }}</h6>
+        <p class="item-version">Version: {{ item.buildVersion }} (Build:{{ item.buildVersionNo }})   {{item.buildCreated | dateFormat}}</p>
       </div>
     </div>
 
     <div *ngIf="expandedItemIndex === i" class="item-details">
       <div>
-        <p>Update text</p>
+        <p>Update text:</p>
         <span>{{ item.buildUpdateDescription }}</span>
       </div>
       <button class="install-button" (click)="installApp(item)" [ngClass]="{'stay': item?.isDownloading}">Install

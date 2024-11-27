@@ -1,6 +1,7 @@
 :host {
   overflow-x: hidden;
 }
+
 .app-header-item {
   overflow-x: hidden;
   display: flex;
@@ -9,6 +10,8 @@
   text-align: center;
   margin: 10px;
   border-bottom: 1px #ddd solid;
+  position: relative;
+
 
   .icon {
     width: 7rem;
@@ -30,6 +33,52 @@
     display: flex;
     /* Use flexbox for layout */
     align-items: center;
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .download-container {
+      position: absolute;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      right: 0.3rem;
+      top: 1.5rem;
+      background-color: #f8f9fa;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      padding: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 200px;
+      text-align: center;
+    }
+
+    .download-container span {
+      font-size: 14px;
+      /* Set font size */
+      color: #495057;
+      /* Darker text color for readability */
+      margin-bottom: 5px;
+      /* Space between the items */
+    }
+
+    .download-container span:last-child {
+      font-weight: bold;
+      /* Make the "try again" text bold */
+      color: #007bff;
+      /* Use a blue color for call-to-action */
+      cursor: pointer;
+      /* Change cursor to pointer for interactivity */
+    }
+
+    .download-container span:last-child:hover {
+      text-decoration: underline;
+      /* Underline on hover */
+    }
+
 
     /* Center items vertically */
     .platform-icon {

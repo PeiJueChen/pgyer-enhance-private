@@ -44,6 +44,7 @@ body {
     width: 100%;
     height: 100%;
     overflow-x: hidden;
+
     .app-list {
       width: 100%;
       height: 100%;
@@ -67,6 +68,13 @@ body {
   background-color: white;
   /* Set background color to white */
   max-width: 600px;
+  margin-top: -4rem;
+  .title {
+    white-space: nowrap;
+  }
+  .sub-title {
+    text-align: center;
+  }
   .error-message {
     color: #e74c3c;
     /* Set error message color to red */

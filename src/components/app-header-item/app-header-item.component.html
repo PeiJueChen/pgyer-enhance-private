@@ -1,19 +1,25 @@
 <div class="app-header-item">
   <div class="icon">
-    <img
-      [src]="item?.realIcon || 'https://www.pgyer.com/image/view/app_icons/'+item.buildIcon" />
+    <img [src]="item?.realIcon || 'https://www.pgyer.com/image/view/app_icons/'+item.buildIcon" />
   </div>
   <h3 class="name">{{item.buildName}}</h3>
   <div class="device-name-container">
     <p class="device-name">
       <img src="assets/images/ios.svg" *ngIf="appDataService.platform == 'ios'" class="platform-icon" />
-    <img src="assets/images/android.svg" *ngIf="appDataService.platform == 'android'" class="platform-icon" />
-      {{ appDataService.platform == 'android' ? 'For Android device' : 'For iOS device'}}</p>
+      <img src="assets/images/android.svg" *ngIf="appDataService.platform == 'android'" class="platform-icon" />
+      {{ appDataService.platform == 'android' ? 'For Android device' : 'For iOS device'}}
+    </p>
+
+    <div class="download-container" *ngIf="appDataService.pgyerOriginalLink" (click)="retryDownload()">
+      <span>Download failed?</span>
+      <span>try again</span>
+    </div>
   </div>
   <div class="qrcode">
-    <qrcode [qrdata]="appDataService.href" size="256" [errorCorrectionLevel]="'M'"></qrcode>
+    <qrcode [qrdata]="appDataService.href" size="300" [errorCorrectionLevel]="'L'" colorDark="#1abc9c"></qrcode>
   </div>
-  <button class="install-button" (click)="installApp()" [ngClass]="{'stay': item?.isDownloading}">Install <span class="loading" *ngIf="item?.isDownloading"></span></button>
+  <button class="install-button" (click)="installApp()" [ngClass]="{'stay': item?.isDownloading}">Install <span
+      class="loading" *ngIf="item?.isDownloading"></span></button>
 
   <div class="info-container">
     <p class="info-title">About {{item.buildName}} App</p>
@@ -32,13 +38,13 @@
       </div>
       <div class="info-item">
         <span>Build</span>
-        <span>{{item.buildBuildVersion}}</span>
+        <span>{{item.buildVersionNo}}</span>
       </div>
     </div>
   </div>
 
   <div class="news">
-    <p>Update text</p>
+    <p>Update text:</p>
     <span>{{item?.buildUpdateDescription}}</span>
   </div>
 

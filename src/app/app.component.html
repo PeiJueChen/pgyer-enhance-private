@@ -2,10 +2,10 @@
   <img src="assets/images/aigens.png" class="header-logo" />
 
   <div class="pwd-container" *ngIf="showPasswordForm">
-    <h2>Password</h2>
+    <h2 class="title">Aigens App Downloader</h2>
+    <p class="sub-title">Password</p>
     <form (ngSubmit)="onSubmit()" #passwordForm="ngForm">
       <div class="form-group">
-        <label for="password">Password:</label>
         <input type="password" id="password" name="password" [(ngModel)]="password" required class="form-control"
           placeholder="Enter your password">
         <div *ngIf="password && password != appDataService.currentAppInfo.buildPassword" class="error-message">
