@@ -16,7 +16,11 @@ export class AppComponent {
   constructor(private dataService: DataService, public appDataService: AppDataService) {
     this.href = decodeURIComponent(window.location.href);
     this.appDataService.href = window.location.href;
-    this.getDeviceConfig();
+    if (!this.getValue('app')) {
+      this.dataService.showAlert("Error", "missing app parameter");
+    }else {
+      this.getDeviceConfig();
+    }
   }
 
   // https://pgyer-enhance.web.app/app/bksg?env=uat&platform=android
