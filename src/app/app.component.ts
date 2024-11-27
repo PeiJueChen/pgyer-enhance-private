@@ -94,6 +94,10 @@ export class AppComponent {
       this.appDataService.env = this.getValue('env');
       this.appDataService.app = this.getValue('app');
       const app = projects.find(p => p.name === this.appDataService.app);
+      if (!app) {
+        this.dataService.showAlert("Error", "app not found");
+        return;
+      }
       this.appDataService.currentAppInfo = app?.['pgyer']?.[this.appDataService.platform]?.[this.appDataService.env];
       this.appDataService.pgyerOriginalLink = !!this.appDataService.currentAppInfo?.channel ? `https://www.pgyer.com/${this.appDataService.currentAppInfo?.channel}` : '';
       this.appDataService.apiKey = this.appDataService.currentAppInfo?.apiKey || this.appDataService.apiKey;
