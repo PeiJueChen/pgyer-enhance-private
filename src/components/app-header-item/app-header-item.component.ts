@@ -24,7 +24,6 @@ export class AppHeaderItemComponent implements OnInit {
 
     QRCode.toDataURL(this.appDataService.href, { errorCorrectionLevel: 'H' })
       .then(url => {
-        console.log(url)
         this.qrcodeUrl = url;
       })
       .catch(err => {
