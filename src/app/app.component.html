@@ -6,7 +6,7 @@
     <p class="sub-title">Password</p>
     <form (ngSubmit)="onSubmit()" #passwordForm="ngForm">
       <div class="form-group">
-        <input type="password" id="password" name="password" [(ngModel)]="password" required class="form-control"
+        <input type="number" id="password" name="password" [(ngModel)]="password" required class="form-control"
           placeholder="Enter your password">
         <div *ngIf="password && password != appDataService.currentAppInfo.buildPassword" class="error-message">
           Password is incorrect.
