@@ -116,7 +116,6 @@ export class DataService {
     if (!page) page = 1;
 
     try {
-      const data = JSON.stringify( { _api_key: apiKey, appKey, page });
       var rsp: any = await this.getPromise(url, { _api_key: apiKey, appKey, page }, {
         'Content-Type': 'application/x-www-form-urlencoded'
       })

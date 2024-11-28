@@ -17,7 +17,7 @@ export class AppComponent {
     this.appDataService.href = window.location.href;
     if (!this.getValue('app')) {
       this.dataService.showAlert("Error", "missing app parameter");
-    }else {
+    } else {
       this.getDeviceConfig();
     }
   }
@@ -81,6 +81,11 @@ export class AppComponent {
     })
     this.appDataService.realVerions = realVerions;
     this.appDataService.itemVersions = [...realVerions].splice(1);
+
+    if (!this.appDataService.realVerions || this.appDataService.realVerions.length === 0) {
+      this.dataService.showAlert('Error', 'No versions found for this app.');
+      return;
+    }
 
   }
 
