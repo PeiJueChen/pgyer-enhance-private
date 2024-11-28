@@ -12,6 +12,7 @@ body {
 
 .container {
   overflow-x: hidden;
+  overflow-y: auto;
   display: flex;
   /* Use flexbox for layout */
   justify-content: center;
@@ -49,6 +50,7 @@ body {
       width: 100%;
       height: 100%;
       overflow-y: auto;
+      -webkit-overflow-scrolling: auto;
     }
 
 
@@ -69,7 +71,8 @@ body {
   background-color: white;
   /* Set background color to white */
   max-width: 600px;
-  margin-top: -4rem;
+  align-self: flex-start;
+  margin-top: 30%;
   .title {
     white-space: nowrap;
   }
