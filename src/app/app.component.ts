@@ -77,7 +77,7 @@ export class AppComponent {
     const realVerions = versions.filter(version => {
       version.realIcon = realIcon || `https://www.pgyer.com/image/view/app_icons/${version.buildIcon}`;
       realIcon = version.realIcon;
-      return (version?.buildUpdateDescription || UAT_ENV).includes(envStr)
+      return (version?.buildUpdateDescription || UAT_ENV).includes(envStr);
     })
     this.appDataService.realVerions = realVerions;
     this.appDataService.itemVersions = [...realVerions].splice(1);
