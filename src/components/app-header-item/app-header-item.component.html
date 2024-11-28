@@ -16,7 +16,7 @@
     </div>
   </div>
   <div class="qrcode">
-    <qrcode [qrdata]="appDataService.href" size="300" [errorCorrectionLevel]="'L'" colorDark="#1abc9c"></qrcode>
+    <img [src]="qrcodeUrl">
     <img [src]="item?.realIcon || 'https://www.pgyer.com/image/view/app_icons/'+item.buildIcon" class="qr-logo" />
   </div>
   <button class="install-button" (click)="installApp()" [ngClass]="{'stay': item?.isDownloading}">Install <span

@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { AppHeaderItemComponent } from '../components/app-header-item/app-header-item.component';
 import { AppItemComponent } from '../components/app-item/app-item.component';
 import { BytesToMBPipe, DateFormatPipe } from '../pipes/DataPipe.pipe';
-import { QRCodeModule } from 'angularx-qrcode';
 import { PlatformModule } from '@angular/cdk/platform';
 
 @NgModule({
@@ -28,7 +27,6 @@ import { PlatformModule } from '@angular/cdk/platform';
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    QRCodeModule,
     PlatformModule
   ],
   providers: [],

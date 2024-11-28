@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppDataService } from '../../services/app-data.service';
 import { DataService } from '../../services/data-service';
-
+import QRCode from 'qrcode'
 @Component({
   selector: 'app-app-header-item',
   templateUrl: './app-header-item.component.html',
@@ -12,6 +12,7 @@ export class AppHeaderItemComponent implements OnInit {
   constructor(public appDataService: AppDataService, private dataService: DataService) { }
 
   item;
+  qrcodeUrl;
   ngOnInit() {
 
     if (!this.appDataService.realVerions || this.appDataService.realVerions.length === 0) {
@@ -20,6 +21,15 @@ export class AppHeaderItemComponent implements OnInit {
     }
 
     this.item = this.appDataService.realVerions[0];
+
+    QRCode.toDataURL(this.appDataService.href, { errorCorrectionLevel: 'H' })
+      .then(url => {
+        console.log(url)
+        this.qrcodeUrl = url;
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }
 
 
