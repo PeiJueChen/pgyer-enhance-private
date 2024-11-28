@@ -3,12 +3,13 @@
 }
 
 .app-header-item {
-  overflow-x: hidden;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin: 10px;
+  padding: 10px;
+  padding-top: 30px;
   border-bottom: 1px #ddd solid;
   position: relative;
 
