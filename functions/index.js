@@ -9,46 +9,63 @@
 
 const functions = require('firebase-functions');
 const express = require('express');
+const cors = require('cors');
 
-const { getDeviceConfig } = require('./http');
+const { getDeviceConfig, getAllVersions } = require('./http');
 
-// 创建一个 Express 应用
 const app = express();
+
+const isPrd = process.env?.NODE_ENV != 'development';
+
+const whitelist = ['https://pgyer-enhance.web.app'];
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!isPrd) {
+      callback(null, true);
+      return;
+    }
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS' + whitelist));
+    }
+  }
+};
+app.use(cors(corsOptions));
 
 function returnError(res, message) {
   res.status(500).send(message);
 }
 
-const isPrd = true;
 
-https://us-central1-aigensstoretest.cloudfunctions.net/appdownload/init
-app.get('/init', async (req, res) => {
+
+app.use('/', async (req, res, next) => {
   const referer = req.get('Referer') || req.get('referer') || '';
-  var originalUrl = (req.originalUrl || "").split('referer=')[1];
-  originalUrl = decodeURIComponent(originalUrl);
-
-  if (isPrd) originalUrl = "";
-
-  if (!referer) {
-    returnError(res, `Please don't do like this!`);
-    return;
-  }
 
   try {
     const url = new URL(referer);
     const hostname = url.hostname;
-    const valids = ['pgyer-enhance.web.app', ];
+    const valids = ['pgyer-enhance.web.app',];
 
-    if (!valids.includes(hostname) && !originalUrl.includes('http://localhost:4200')) {
+    if (!valids.includes(hostname) && isPrd) {
       returnError(res, `Please don't do like this!`);
       return;
     }
 
   } catch (error) {
-    returnError(res, `Please don't do like this!`);
-    return;
+    if (isPrd) {
+      returnError(res, `Please don't do like this!`);
+      return;
+    }
   }
 
+  next();
+});
+
+var _deviceData = null;
+https://us-central1-aigensstoretest.cloudfunctions.net/appdownload/init
+app.get('/init', async (req, res) => {
+  const referer = req.get('Referer') || req.get('referer') || '';
   var deviceData = {};
   try {
     var rsp = await getDeviceConfig()
@@ -59,13 +76,63 @@ app.get('/init', async (req, res) => {
   }
   deviceData.originalUrl = req.originalUrl;
   deviceData.referer = referer;
+  _deviceData = deviceData;
+  deviceData['aaa'] = process.env.NODE_ENV;
   const r = `
     var deviceData = ${JSON.stringify(deviceData)};
   `
   res.send(r);
 });
+// xxx/versions?platform=xx&env=xxx&app=xxx
+app.get('/versions', async (req, res) => {
+  const query = req.query || {};
+  const platform = query.platform;
+  const env = query.env;
+  const app = query.app;
+  if (!platform || !env || !app) {
+    returnError(res, 'missing parameters');
+  }
 
+  if (!_deviceData) {
+    var rsp = await getDeviceConfig()
+    _deviceData = rsp?.data?.data || null;
+  }
 
+  if (!_deviceData) {
+    returnError(res, 'device data not found');
+    return;
+  }
+
+  var apiKey = _deviceData?.defaultPgyerApiKey;
+  const projects = _deviceData?.projects || [];
+  const appObj = projects.find(p => p.name === app);
+  if (!appObj) {
+    returnError(res, "app not found");
+    return;
+  }
+  const currentAppInfo = appObj?.['pgyer']?.[platform]?.[env];
+  if (!currentAppInfo) {
+    returnError(res, "app version not found");
+    return;
+  }
+  const pgyerOriginalLink = !!currentAppInfo?.channel ? `https://www.pgyer.com/${currentAppInfo?.channel}` : '';
+  apiKey = currentAppInfo?.apiKey || apiKey;
+  const buildPassword = currentAppInfo?.buildPassword;
+  const appKey = currentAppInfo?.appKey;
+  delete currentAppInfo.appKey;
+  delete currentAppInfo.channel;
+  // const base64 = (str) => {
+  //   const buffer = Buffer.from(str, 'utf-8');
+  //   return buffer.toString('base64');
+  // }
+  // if (buildPassword) {
+  //   currentAppInfo.buildPassword = base64(buildPassword + "@igens!");
+  // }
+  // currentAppInfo['pgyerOriginalLink'] = pgyerOriginalLink;
+  const versions = await getAllVersions(apiKey, appKey, 1, env);
+  // currentAppInfo['versions'] = versions;
+  res.json(versions);
+});
 
 
 exports.appdownload = functions.https.onRequest(app);

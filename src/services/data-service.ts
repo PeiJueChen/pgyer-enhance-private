@@ -80,6 +80,7 @@ export class DataService {
     return obs;
   }
 
+
   postPromise(endpoint: string, body: any, headers?: any) {
     return new Promise((resolve, reject) => {
       this.post(endpoint, body, headers).subscribe(
@@ -135,5 +136,12 @@ export class DataService {
     }
     const result = [...this.allVersions]
     return result;
+  }
+
+  async getVersionsReal(app, env, platform): Promise<any> {
+    var uat = "http://localhost:5001/pgyer-enhance/us-central1/appdownload/versions";
+    var prd = "https://us-central1-aigensstoretest.cloudfunctions.net/appdownload/versions";
+    var url = location.hostname == 'localhost' ? uat : prd;
+    return this.getPromise(url, { app, env, platform });
   }
 }

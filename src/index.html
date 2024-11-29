@@ -24,7 +24,7 @@
       const hostList = {};
 
       var referer = location.href;
-      var uat = "http://127.0.0.1:5001/pgyer-enhance/us-central1/appdownload/init";
+      var uat = "http://localhost:5001/pgyer-enhance/us-central1/appdownload/init";
       var prd = "https://us-central1-aigensstoretest.cloudfunctions.net/appdownload/init";
       var url = location.hostname == 'localhost' ? uat : prd;
       script.src = url + "?referer=" + encodeURIComponent(referer);

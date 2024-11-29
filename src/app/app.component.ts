@@ -60,6 +60,22 @@ export class AppComponent {
   //     "buildDownloadCount": 0
   // }
   private async getVersions() {
+    if (1) {
+      try {
+        const realVerions = await this.dataService.getVersionsReal(this.appDataService.app, this.appDataService.env, this.appDataService.platform);
+        this.appDataService.realVerions = realVerions;
+        this.appDataService.itemVersions = [...realVerions].splice(1);
+        if (!this.appDataService.realVerions || this.appDataService.realVerions.length === 0) {
+          this.dataService.showAlert('Error', 'No versions found for this app.');
+          return;
+        }
+
+      } catch (error: any) {
+        this.dataService.showAlert('Error', error?.message);
+      }
+      return;
+    }
+
     this.dataService.clearAllVerions();
     const versions = await this.dataService.getAllVerions(this.appDataService.apiKey, this.appDataService.currentAppInfo?.appKey);
     this.dataService.clearAllVerions();
