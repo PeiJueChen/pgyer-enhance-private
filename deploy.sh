@@ -1,5 +1,7 @@
 rm -rf dist
 echo "Building..."
 ng build --configuration production
-echo "Deploying..."
-firebase deploy
+
+echo "host Deploying..."
+firebase deploy --only hosting
+

@@ -90,6 +90,31 @@ export class AppComponent {
   }
 
   private getDeviceConfig() {
+    if (1) {
+      const data = window?.['deviceData'];
+      if (!data) {
+        this.dataService.showAlert("Error", "Please run on the correct device");
+        return;
+      };
+      this.appDataService.deviceConfig = data;
+      this.appDataService.apiKey = this.appDataService.deviceConfig?.defaultPgyerApiKey;
+      const projects = this.appDataService.deviceConfig?.projects || [];
+      this.appDataService.platform = this.getValue('platform');
+      this.appDataService.env = this.getValue('env');
+      this.appDataService.app = this.getValue('app');
+      const app = projects.find(p => p.name === this.appDataService.app);
+      if (!app) {
+        this.dataService.showAlert("Error", "app not found");
+        return;
+      }
+      this.appDataService.currentAppInfo = app?.['pgyer']?.[this.appDataService.platform]?.[this.appDataService.env];
+      this.appDataService.pgyerOriginalLink = !!this.appDataService.currentAppInfo?.channel ? `https://www.pgyer.com/${this.appDataService.currentAppInfo?.channel}` : '';
+      this.appDataService.apiKey = this.appDataService.currentAppInfo?.apiKey || this.appDataService.apiKey;
+      this.showPasswordForm = !!this.appDataService?.currentAppInfo?.buildPassword;
+      this.getVersions();
+      return;
+    }
+
     this.dataService.getDeviceConfig('_57041316416061_4').subscribe((data: any) => {
       this.appDataService.deviceConfig = data?.data?.data;
       this.appDataService.apiKey = this.appDataService.deviceConfig?.defaultPgyerApiKey;

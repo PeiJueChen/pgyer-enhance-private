@@ -1,14 +1,44 @@
 <!doctype html>
 <html lang="en" style="overflow: hidden;-webkit-overflow-scrolling: auto;">
+
 <head>
   <meta charset="utf-8">
   <title>PgyerEnhance</title>
   <base href="/">
   <meta name="viewport"
-        content="viewport-fit=cover, width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    content="viewport-fit=cover, width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <script>
+    (function (d) {
+      script = d.createElement('script');
+      script.type = 'text/javascript';
+      script.defer = true;
+      script.onload = function () {
+        if (window['bootstrap']) window['bootstrap']();
+      };
+      script.onerror = function () {
+        document.getElementById("reload").style.display = "block";
+      };
+
+      const hostList = {};
+
+      var referer = location.href;
+      var uat = "http://127.0.0.1:5001/pgyer-enhance/us-central1/appdownload/init";
+      var prd = "https://us-central1-aigensstoretest.cloudfunctions.net/appdownload/init";
+      var url = location.hostname == 'localhost' ? uat : prd;
+      script.src = url + "?referer=" + encodeURIComponent(referer);
+      d.getElementsByTagName('head')[0].appendChild(script);
+    }(document));
+
+  </script>
+
+
 </head>
+
 <body style="overflow-x: hidden;">
   <app-root></app-root>
+  <div id="reload" style="display: none;">Please reload again</div>
 </body>
+
 </html>

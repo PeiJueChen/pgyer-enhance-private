@@ -17,7 +17,7 @@ export class AppItemComponent implements OnInit {
   ngOnInit() {
     this.displayedItems = this.appDataService.itemVersions.slice(0, 6);
     this.shownAllButton = this.appDataService?.itemVersions.length > 6;
-    this.appName = this.displayedItems[0].buildName;
+    this.appName = this.displayedItems?.[0]?.buildName;
   }
 
   toggleItem(index: number): void {

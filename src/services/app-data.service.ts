@@ -17,9 +17,33 @@ export class AppDataService {
   realVerions: any[] = [];
   itemVersions: any = [];
   href;
+  dataKey = "DATA_KEY";
   constructor(public platformService: Platform) {
 
   }
+
+  setLocal(key: string, object: any) {
+    try {
+      localStorage.setItem(key, JSON.stringify(object));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  getLocal(key: string): any {
+    try {
+
+      const str = localStorage.getItem(key);
+      if (!str) {
+        return null;
+      }
+      return JSON.parse(str);
+    } catch (e) {
+      console.log(e);
+    }
+    return null;
+  }
+
 
 
   getDownloadUrl(item) {

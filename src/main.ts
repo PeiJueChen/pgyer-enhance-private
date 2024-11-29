@@ -8,5 +8,16 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+
+const w = window as any;
+
+let bootstrap = () => {
+  platformBrowserDynamic().bootstrapModule(AppModule)
+    .catch(err => console.error(err));
+}
+
+if (w['deviceData']) {
+  bootstrap();
+} else {
+  w['bootstrap'] = bootstrap;
+}
