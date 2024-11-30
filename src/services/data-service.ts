@@ -143,6 +143,6 @@ export class DataService {
     var prd = "https://us-central1-aigensstoretest.cloudfunctions.net/appdownload/versions";
     const host = location.hostname;
     var url = (host == 'localhost' || host.startsWith('192.168.')) ? uat : prd;
-    return this.getPromise(url, { app, env, platform });
+    return this.getPromise(url + `?t=${new Date().getTime()}`, { app, env, platform });
   }
 }
