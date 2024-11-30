@@ -19,14 +19,17 @@ body {
   /* Center content horizontally */
   align-items: center;
   /* Center content vertically */
-  height: 100vh;
+  height: 100%;
+  width: 100%;
   /* Make container fill the viewport height */
   // width: 100vw;
   background-color: white;
   position: relative;
+  padding-top: constant(safe-area-inset-top) !important;
+  padding-top: env(safe-area-inset-top) !important;
 
   .header-logo {
-    position: absolute;
+    position: fixed;
     /* Use absolute positioning */
     top: 5px;
     width: 6rem;
@@ -37,7 +40,9 @@ body {
     height: auto;
     /* Maintain aspect ratio */
     z-index: 1000;
-    /* Ensure it is above other elements */
+
+    top: calc(constant(safe-area-inset-top) + 5px) !important;
+    top: calc(env(safe-area-inset-top) + 5px) !important;
   }
 
   /* Set background color */
@@ -52,6 +57,9 @@ body {
       overflow-y: auto;
       overflow-x: hidden;
       -webkit-overflow-scrolling: auto;
+      &.ios-list {
+        padding-bottom: 2rem;
+      }
     }
 
 

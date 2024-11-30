@@ -19,7 +19,7 @@
   <div class="content" *ngIf="!showPasswordForm">
       <p *ngIf="!appDataService.realVerions?.length" class="loading">loading</p>
 
-      <div *ngIf="appDataService.realVerions?.length" class="app-list">
+      <div *ngIf="appDataService.realVerions?.length" class="app-list" [ngClass]="{'ios-list': p.IOS}">
         <app-app-header-item></app-app-header-item>
         <app-app-item></app-app-item>
       </div>

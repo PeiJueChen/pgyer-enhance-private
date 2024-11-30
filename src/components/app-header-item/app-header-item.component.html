@@ -1,4 +1,4 @@
-<div class="app-header-item">
+<div class="app-header-item" [ngClass]="{'ios-header': p.IOS}">
   <div class="icon">
     <img [src]="item?.realIcon || 'https://www.pgyer.com/image/view/app_icons/'+item.buildIcon" />
   </div>

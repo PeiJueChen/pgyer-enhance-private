@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DataService } from '../services/data-service';
 import { AppDataService } from '../services/app-data.service';
+import { Platform } from '@angular/cdk/platform';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,7 @@ export class AppComponent {
   password = "";
   showPasswordForm = false;
   href;
-  constructor(private dataService: DataService, public appDataService: AppDataService) {
+  constructor(private dataService: DataService, public appDataService: AppDataService, public p: Platform) {
     this.href = decodeURIComponent(window.location.href);
     this.appDataService.href = window.location.href;
     if (!this.getValue('app')) {

@@ -40,6 +40,11 @@ function returnError(res, message) {
 
 
 app.use('/', async (req, res, next) => {
+
+  if (!isPrd) {
+    next();
+    return;
+  }
   const referer = req.get('Referer') || req.get('referer') || '';
 
   try {
@@ -47,16 +52,14 @@ app.use('/', async (req, res, next) => {
     const hostname = url.hostname;
     const valids = ['pgyer-enhance.web.app',];
 
-    if (!valids.includes(hostname) && isPrd) {
+    if (!valids.includes(hostname)) {
       returnError(res, `Please don't do like this!`);
       return;
     }
 
   } catch (error) {
-    if (isPrd) {
-      returnError(res, `Please don't do like this!`);
-      return;
-    }
+    returnError(res, `Please don't do like this!`);
+    return;
   }
 
   next();

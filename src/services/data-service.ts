@@ -141,7 +141,8 @@ export class DataService {
   async getVersionsReal(app, env, platform): Promise<any> {
     var uat = "http://localhost:5001/pgyer-enhance/us-central1/appdownload/versions";
     var prd = "https://us-central1-aigensstoretest.cloudfunctions.net/appdownload/versions";
-    var url = location.hostname == 'localhost' ? uat : prd;
+    const host = location.hostname;
+    var url = (host == 'localhost' || host.startsWith('192.168.')) ? uat : prd;
     return this.getPromise(url, { app, env, platform });
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AppDataService } from '../../services/app-data.service';
 import { DataService } from '../../services/data-service';
 import QRCode from 'qrcode'
+import { Platform } from '@angular/cdk/platform';
 @Component({
   selector: 'app-app-header-item',
   templateUrl: './app-header-item.component.html',
@@ -9,7 +10,9 @@ import QRCode from 'qrcode'
 })
 export class AppHeaderItemComponent implements OnInit {
 
-  constructor(public appDataService: AppDataService, private dataService: DataService) { }
+  constructor(public appDataService: AppDataService, private dataService: DataService, public p: Platform) {
+
+   }
 
   item;
   qrcodeUrl;
