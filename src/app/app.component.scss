@@ -87,6 +87,7 @@ body {
   }
   .sub-title {
     text-align: center;
+    color: #969b9d;
   }
   .error-message {
     color: #e74c3c;
@@ -108,10 +109,11 @@ body {
   .form-group {
     margin-bottom: 20px;
     margin-top: 2rem;
+    text-align: center;
   }
 
   .form-control {
-    width: 100%;
+    width: 70%;
     /* Input field takes full width */
     padding: 10px;
     /* Add padding */
@@ -120,7 +122,10 @@ body {
     border-radius: 4px;
     /* Add rounded corners */
     font-size: 16px;
-    /* Set font size */
+    text-align: center;
+  }
+  .form-control:hover {
+    border: 1px solid #aaa;
   }
 
   .btn {
@@ -160,16 +165,19 @@ body {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-size: 17px;
+    border-radius: 30px;
+    border: 1px solid transparent;
+    margin-top: 1rem;
 
     &:hover {
-      background-color: #0056b3;
+      background-color: #16a085;
     }
 
     &:active {
-      background-color: #004085;
+      background-color: #16a085;
       transform: translateY(1px);
     }
 
