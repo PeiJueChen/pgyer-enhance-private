@@ -80,9 +80,16 @@ app.get('/init', async (req, res) => {
   deviceData.originalUrl = req.originalUrl;
   deviceData.referer = referer;
   _deviceData = deviceData;
-  deviceData['aaa'] = process.env.NODE_ENV;
+  deviceData['NODE_ENV'] = process.env.NODE_ENV;
+
+  const base64 = (str) => {
+    const buffer = Buffer.from(str, 'utf-8');
+    return buffer.toString('base64');
+  }
+  const dd = base64(JSON.stringify(deviceData));
+
   const r = `
-    var deviceData = ${JSON.stringify(deviceData)};
+    var deviceData = ${JSON.stringify({'result': "HBLZXkiOi"+dd})};
   `
   res.send(r);
 });

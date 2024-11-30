@@ -106,6 +106,10 @@ export class AppComponent {
 
   }
 
+  private base64Decode(str: string) {
+    return atob(str);
+  }
+
   private getDeviceConfig() {
     if (1) {
       const data = window?.['deviceData'];
@@ -113,7 +117,9 @@ export class AppComponent {
         this.dataService.showAlert("Error", "Please run on the correct device");
         return;
       };
-      this.appDataService.deviceConfig = data;
+      let target = (data['result'] || "").replace("HBLZXkiOi", "");
+      target = this.base64Decode(target);
+      this.appDataService.deviceConfig = JSON.parse(target);
       this.appDataService.apiKey = this.appDataService.deviceConfig?.defaultPgyerApiKey;
       const projects = this.appDataService.deviceConfig?.projects || [];
       this.appDataService.platform = this.getValue('platform');
