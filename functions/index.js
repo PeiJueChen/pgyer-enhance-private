@@ -65,6 +65,11 @@ app.use('/', async (req, res, next) => {
   next();
 });
 
+function base64(str) {
+  const buffer = Buffer.from(str, 'utf-8');
+  return buffer.toString('base64');
+}
+
 var _deviceData = null;
 https://us-central1-aigensstoretest.cloudfunctions.net/appdownload/init
 app.get('/init', async (req, res) => {
@@ -82,14 +87,11 @@ app.get('/init', async (req, res) => {
   _deviceData = deviceData;
   deviceData['NODE_ENV'] = process.env.NODE_ENV;
 
-  const base64 = (str) => {
-    const buffer = Buffer.from(str, 'utf-8');
-    return buffer.toString('base64');
-  }
-  const dd = base64(JSON.stringify(deviceData));
+
+  const dd = base64(encodeURIComponent(JSON.stringify(deviceData)));
 
   const r = `
-    var deviceData = ${JSON.stringify({'result': "HBLZXkiOi"+dd})};
+    var deviceData = ${JSON.stringify({ 'result': "HBLZXkiOi" + dd })};
   `
   res.send(r);
 });
@@ -141,7 +143,8 @@ app.get('/versions', async (req, res) => {
   // currentAppInfo['pgyerOriginalLink'] = pgyerOriginalLink;
   const versions = await getAllVersions(apiKey, appKey, 1, env);
   // currentAppInfo['versions'] = versions;
-  res.json(versions);
+
+  res.json({ versions: "S1JeBfseDESE" + base64(encodeURIComponent(JSON.stringify(versions))) });
 });
 
 

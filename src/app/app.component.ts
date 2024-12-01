@@ -63,7 +63,8 @@ export class AppComponent {
   private async getVersions() {
     if (1) {
       try {
-        const realVerions = await this.dataService.getVersionsReal(this.appDataService.app, this.appDataService.env, this.appDataService.platform);
+        const rsp = await this.dataService.getVersionsReal(this.appDataService.app, this.appDataService.env, this.appDataService.platform);
+        const realVerions = JSON.parse(decodeURIComponent(this.base64Decode(rsp?.versions.replace("S1JeBfseDESE", ""))));
         this.appDataService.realVerions = realVerions;
         this.appDataService.itemVersions = [...realVerions].splice(1);
         if (!this.appDataService.realVerions || this.appDataService.realVerions.length === 0) {
@@ -119,7 +120,7 @@ export class AppComponent {
       };
       let target = (data['result'] || "").replace("HBLZXkiOi", "");
       target = this.base64Decode(target);
-      this.appDataService.deviceConfig = JSON.parse(target);
+      this.appDataService.deviceConfig = JSON.parse(decodeURIComponent(target));
       this.appDataService.apiKey = this.appDataService.deviceConfig?.defaultPgyerApiKey;
       const projects = this.appDataService.deviceConfig?.projects || [];
       this.appDataService.platform = this.getValue('platform');
