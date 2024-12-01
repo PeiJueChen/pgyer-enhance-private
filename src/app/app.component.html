@@ -2,7 +2,11 @@
   <img src="assets/images/aigens.png" class="header-logo" />
 
   <div class="pwd-container" *ngIf="showPasswordForm">
-    <h2 class="title">Aigens App Downloader</h2>
+    <!-- <h2 class="title">Aigens App Downloader</h2> -->
+    <div class="app-info" *ngIf="appIcon">
+      <img *ngIf="appIcon" [src]="appIcon" class="app-logo" />
+      <span>{{appName}}</span>
+    </div>
     <p class="sub-title">This app needs password to install. Please enter the password.</p>
     <form (ngSubmit)="onSubmit()" #passwordForm="ngForm">
       <div class="form-group">

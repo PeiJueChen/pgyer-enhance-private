@@ -120,8 +120,20 @@ body {
   align-self: flex-start;
   margin-top: 30%;
 
+  .app-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 30px;
+      margin: 10px 0;
+    }
+  }
+
   .title {
     white-space: nowrap;
+    margin-top: 10px;
   }
 
   .sub-title {

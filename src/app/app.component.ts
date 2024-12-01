@@ -16,6 +16,7 @@ export class AppComponent {
   href;
   qrcodeUrl;
   appIcon;
+  appName;
   constructor(private dataService: DataService, public appDataService: AppDataService, public p: Platform) {
     this.href = decodeURIComponent(window.location.href);
     this.appDataService.href = window.location.href;
@@ -84,6 +85,7 @@ export class AppComponent {
         }
 
         this.appIcon = this.appDataService.realVerions[0]?.realIcon;
+        this.appName = this.appDataService.realVerions[0]?.buildName;
       } catch (error: any) {
         this.dataService.showAlert('Error', error?.message);
       }
