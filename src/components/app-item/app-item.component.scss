@@ -134,7 +134,7 @@
   font-size: 1rem;
   padding: 10px 20px;
   /* Add padding */
-  background-color: #1abc9c;
+  // background-color: #1abc9c;
   /* Button background color */
   color: white;
   /* Button text color */
@@ -151,7 +151,7 @@
   border: 1px solid #1abc9c;
 
   &:hover {
-    background-color: #16a085;
+    background-color: #fff;
     /* Darker shade on hover */
   }
 }

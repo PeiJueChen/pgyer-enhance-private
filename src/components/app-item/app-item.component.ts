@@ -13,6 +13,7 @@ export class AppItemComponent implements OnInit {
   constructor(public appDataService: AppDataService, private dataService: DataService) { }
   displayedItems: any[] = [];
   shownAllButton = false;
+  expendAll = false;
   appName;
   ngOnInit() {
     this.displayedItems = this.appDataService.itemVersions.slice(0, 6);
@@ -34,8 +35,14 @@ export class AppItemComponent implements OnInit {
   }
 
   clickAllVersions() {
-    this.shownAllButton = false;
-    this.displayedItems = this.appDataService.itemVersions;
+    if (this.expendAll) {
+      this.displayedItems = this.appDataService.itemVersions;
+
+    } else {
+      this.displayedItems = this.appDataService.itemVersions.slice(0, 6);
+
+    }
+
   }
   installApp(item) {
     const url = this.appDataService.getDownloadUrl(item);

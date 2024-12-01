@@ -21,8 +21,8 @@
     </div>
   </div>
 
-  <div *ngIf="shownAllButton" class="all-versions-button-container" (click)="clickAllVersions()">
-    <button class="all-versions-button">All Versions</button>
+  <div *ngIf="shownAllButton" class="all-versions-button-container" (click)="this.expendAll = !this.expendAll;clickAllVersions()">
+    <button class="all-versions-button">{{expendAll ? 'Show Less' : 'All Versions'}}</button>
   </div>
 
 </div>

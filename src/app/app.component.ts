@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { DataService } from '../services/data-service';
 import { AppDataService } from '../services/app-data.service';
 import { Platform } from '@angular/cdk/platform';
+import QRCode from 'qrcode'
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,8 @@ export class AppComponent {
   password = "";
   showPasswordForm = false;
   href;
+  qrcodeUrl;
+  appIcon;
   constructor(private dataService: DataService, public appDataService: AppDataService, public p: Platform) {
     this.href = decodeURIComponent(window.location.href);
     this.appDataService.href = window.location.href;
@@ -21,6 +24,14 @@ export class AppComponent {
     } else {
       this.getDeviceConfig();
     }
+
+    QRCode.toDataURL(this.appDataService.href, { errorCorrectionLevel: 'H' })
+      .then(url => {
+        this.qrcodeUrl = url;
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }
 
   // https://pgyer-enhance.web.app/app/bksg?env=uat&platform=android
@@ -72,6 +83,7 @@ export class AppComponent {
           return;
         }
 
+        this.appIcon = this.appDataService.realVerions[0]?.realIcon;
       } catch (error: any) {
         this.dataService.showAlert('Error', error?.message);
       }

@@ -28,6 +28,42 @@ body {
   padding-top: constant(safe-area-inset-top) !important;
   padding-top: env(safe-area-inset-top) !important;
 
+  .qrcode-container {
+    color: #333;
+    font-family: NotoSansHans-Regular, AvenirNext-Regular, proxima-nova, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", "Open Sans", "Helvetica Neue", Arial, sans-serif, "Source Han Sans";
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+
+    span {
+      text-align: center;
+    }
+
+    .qrcode {
+      position: relative;
+    }
+
+    .qr-logo {
+      position: absolute;
+      /* Position the logo absolutely within the qrcode */
+      top: calc(50% - 10px);
+      /* Center vertically */
+      left: 50%;
+      /* Center horizontally */
+      transform: translate(-50%, -50%);
+      /* Adjust position */
+      width: 2.4rem;
+      /* Set logo width */
+      height: auto;
+      /* Maintain aspect ratio */
+      z-index: 10;
+      border-radius: 3px;
+    }
+  }
+
   .header-logo {
     position: fixed;
     /* Use absolute positioning */
@@ -57,6 +93,7 @@ body {
       overflow-y: auto;
       overflow-x: hidden;
       -webkit-overflow-scrolling: auto;
+
       &.ios-list {
         padding-bottom: 2rem;
       }
@@ -81,14 +118,17 @@ body {
   /* Set background color to white */
   max-width: 600px;
   align-self: flex-start;
-  margin-top: 30%;
+  margin-top: 3rem;
+
   .title {
     white-space: nowrap;
   }
+
   .sub-title {
     text-align: center;
     color: #969b9d;
   }
+
   .error-message {
     color: #e74c3c;
     /* Set error message color to red */
@@ -124,6 +164,7 @@ body {
     font-size: 16px;
     text-align: center;
   }
+
   .form-control:hover {
     border: 1px solid #aaa;
   }
