@@ -103,6 +103,7 @@ body {
   }
 }
 
+
 .pwd-container {
   width: 100%;
   margin: 2rem;
@@ -240,4 +241,11 @@ body {
     }
   }
 
+}
+
+
+@media (min-width: 768px) {
+  .pwd-container {
+    margin-top: 8rem;
+  }
 }
