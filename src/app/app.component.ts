@@ -80,10 +80,17 @@ export class AppComponent {
         this.appDataService.realVerions = realVerions;
         this.appDataService.itemVersions = [...realVerions].splice(1);
         if (!this.appDataService.realVerions || this.appDataService.realVerions.length === 0) {
-          this.dataService.showAlert('Error', 'No versions found for this app.');
+          const obj = this.appDataService.getLocal(this.appDataService.appKey);
+          if (obj?.href == window.location.href) {
+            window.location.reload();
+          }else {
+            this.appDataService.setLocal(this.appDataService.appKey, null);
+            this.dataService.showAlert('Error', 'No versions found for this app.');
+          }
+
           return;
         }
-
+        this.appDataService.setLocal(this.appDataService.appKey, {href: window.location.href});
         this.appIcon = this.appDataService.realVerions[0]?.realIcon;
         this.appName = this.appDataService.realVerions[0]?.buildName;
       } catch (error: any) {

@@ -18,12 +18,17 @@ export class AppDataService {
   itemVersions: any = [];
   href;
   dataKey = "DATA_KEY";
+  appKey = "PAYGER_APP_KEY";
   constructor(public platformService: Platform) {
 
   }
 
   setLocal(key: string, object: any) {
     try {
+      if (!object) {
+        localStorage.removeItem(key);
+        return;
+      }
       localStorage.setItem(key, JSON.stringify(object));
     } catch (e) {
       console.log(e);

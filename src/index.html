@@ -30,6 +30,13 @@
       var url = (host == 'localhost' || host.startsWith('192.168.')) ? uat : prd;
       script.src = url + "?referer=" + encodeURIComponent(referer);
       d.getElementsByTagName('head')[0].appendChild(script);
+
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) {
+          location.reload();
+        }
+      });
+
     }(document));
 
   </script>
@@ -55,6 +62,7 @@
       height: env(safe-area-inset-top);
       background-color: #16a085;
     }
+
     #reload {
       text-align: center;
       margin-top: 3rem;
