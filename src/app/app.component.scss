@@ -27,6 +27,9 @@ body {
   position: relative;
   padding-top: constant(safe-area-inset-top) !important;
   padding-top: env(safe-area-inset-top) !important;
+  &.has-pwd {
+    overflow-y: auto;
+  }
 
   .qrcode-container {
     color: #333;
