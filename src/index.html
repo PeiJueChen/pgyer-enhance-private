@@ -31,11 +31,11 @@
       script.src = url + "?referer=" + encodeURIComponent(referer);
       d.getElementsByTagName('head')[0].appendChild(script);
 
-      document.addEventListener('visibilitychange', function () {
-        if (!document.hidden) {
-          location.reload();
-        }
-      });
+      // document.addEventListener('visibilitychange', function () {
+      //   if (!document.hidden) {
+      //     location.reload();
+      //   }
+      // });
 
     }(document));
 
