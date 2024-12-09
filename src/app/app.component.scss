@@ -147,6 +147,10 @@ body {
     color: #969b9d;
   }
 
+  form {
+    text-align: center;
+  }
+
   .error-message {
     color: #e74c3c;
     /* Set error message color to red */
@@ -221,7 +225,7 @@ body {
   .submit-button {
     background-color: #16a085;
     color: white;
-    padding: 10px 20px;
+    padding: 15px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -230,6 +234,8 @@ body {
     border-radius: 30px;
     border: 1px solid transparent;
     margin-top: 1rem;
+    width: 70% !important;
+
 
     &:hover {
       background-color: #16a085;
