@@ -11,6 +11,7 @@ body {
 }
 
 .container {
+
   overflow-x: hidden;
   overflow-y: hidden;
   display: flex;
@@ -28,6 +29,8 @@ body {
   padding-top: constant(safe-area-inset-top) !important;
   padding-top: env(safe-area-inset-top) !important;
   margin-bottom: 3rem;
+  position: fixed;
+  z-index: 1;
   &.has-pwd {
     overflow-y: auto;
   }
