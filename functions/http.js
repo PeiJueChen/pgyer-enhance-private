@@ -189,6 +189,7 @@ const getAllVersions = async (apiKey, appKey, page, env) => {
   }
   const UAT_ENV = "Env: uat";
   const PRD_ENV = "Env: prd";
+  const passEnv = env.toLocaleLowerCase();
   const getEnvString = () => {
     if (env) {
       env = env.toLocaleLowerCase();
@@ -201,6 +202,9 @@ const getAllVersions = async (apiKey, appKey, page, env) => {
   result = result.filter(version => {
     version.realIcon = realIcon || `https://www.pgyer.com/image/view/app_icons/${version.buildIcon}`;
     realIcon = version.realIcon;
+    if (passEnv != 'uat' && passEnv != 'prd') {
+      return version?.buildUpdateDescription && version?.buildUpdateDescription.startsWith(env);
+    }
     return (version?.buildUpdateDescription || UAT_ENV).includes(envStr);
   })
 
