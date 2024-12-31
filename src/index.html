@@ -5,10 +5,44 @@
   <meta charset="utf-8">
   <title>PgyerEnhance</title>
   <base href="/">
-  <meta name="viewport"
-    content="viewport-fit=cover, width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <!-- <meta name="viewport"
+    content="viewport-fit=cover, width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" /> -->
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link id="app-version"></link>
+  <link id="app-version">
+  </link>
+  <script>
+    function supportsViewportFit() {
+      const testElement = document.createElement('div');
+      testElement.style.setProperty('display', 'block');
+      testElement.style.setProperty('position', 'absolute');
+      testElement.style.setProperty('top', '0');
+      testElement.style.setProperty('left', '0');
+      document.body.appendChild(testElement);
+
+      const supportsFit = getComputedStyle(testElement).position === 'absolute';
+      document.body.removeChild(testElement);
+
+      return supportsFit;
+    }
+    function setViewport(isOld) {
+      const viewport = document.createElement('meta');
+      viewport.name = 'viewport';
+      var co = isOld ? 'width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no' : 'viewport-fit=cover, width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no';
+      viewport.content = co;
+
+
+      document.getElementsByTagName('head')[0].appendChild(viewport);
+    }
+
+    window.addEventListener('load', function () {
+      if (supportsViewportFit()) {
+        setViewport(false); // 支持，使用 viewport-fit=cover
+      } else {
+        setViewport(true); // 不支持，使用适合旧版的设置
+      }
+    })
+  </script>
+
   <script>
     (function (d) {
       script = d.createElement('script');
