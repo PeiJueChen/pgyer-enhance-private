@@ -3,6 +3,7 @@ import { DataService } from '../services/data-service';
 import { AppDataService } from '../services/app-data.service';
 import { Platform } from '@angular/cdk/platform';
 import QRCode from 'qrcode'
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ export class AppComponent {
   qrcodeUrl;
   appIcon = '/assets/images/ai.png';
   appName = "loading...";
+  version = environment.version;
   constructor(private dataService: DataService, public appDataService: AppDataService, public p: Platform) {
     this.href = decodeURIComponent(window.location.href);
     this.appDataService.href = window.location.href;
@@ -33,6 +35,11 @@ export class AppComponent {
       .catch(err => {
         console.error(err)
       })
+
+      const v = document.getElementById('app-version');
+      if (v) {
+        v.innerHTML = `v${this.version}`;
+      }
   }
 
   // https://pgyer-enhance.web.app/app/bksg?env=uat&platform=android
