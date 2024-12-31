@@ -15,8 +15,8 @@ export class AppComponent {
   showPasswordForm = false;
   href;
   qrcodeUrl;
-  appIcon;
-  appName;
+  appIcon = '/assets/images/ai.png';
+  appName = "loading...";
   constructor(private dataService: DataService, public appDataService: AppDataService, public p: Platform) {
     this.href = decodeURIComponent(window.location.href);
     this.appDataService.href = window.location.href;
