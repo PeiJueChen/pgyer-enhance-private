@@ -1,5 +1,5 @@
 <div class="container" [ngClass]="{'has-pwd': showPasswordForm}">
-  <img src="assets/images/aigens.png" class="header-logo" />
+  <img src="assets/images/aigens.png" class="header-logo" (click)="clickedLogo($event);$event.stopPropagation()"/>
 
   <div class="pwd-container" *ngIf="showPasswordForm">
     <!-- <h2 class="title">Aigens App Downloader</h2> -->

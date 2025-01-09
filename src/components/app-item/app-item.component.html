@@ -15,10 +15,11 @@
     </div>
 
     <div *ngIf="expandedItemIndex === i" class="item-details">
-      <div>
+      <app-update-text [item]="item"></app-update-text>
+      <!-- <div>
         <p>Update text:</p>
         <span>{{ item.buildUpdateDescription }}</span>
-      </div>
+      </div> -->
       <button class="install-button" (click)="installApp(item)" [ngClass]="{'stay': item?.isDownloading}">Install
         <span class="loading" *ngIf="item?.isDownloading"></span>
       </button>

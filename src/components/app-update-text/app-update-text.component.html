@@ -1,0 +1,14 @@
+<div class="update-text-box">
+  <div>
+    <p>Update text:</p>
+    <button (click)="edit()" *ngIf="appDataService.isAigensUser">Edit</button>
+    <button (click)="save()" *ngIf="appDataService.isAigensUser">Save</button>
+  </div>
+  <ng-container *ngIf="isEditing; else displayText">
+    <textarea [(ngModel)]="updateDescription"></textarea>
+  </ng-container>
+
+  <ng-template #displayText>
+    <span class="text">{{ updateDescription }}</span>
+  </ng-template>
+</div>

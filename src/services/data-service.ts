@@ -138,19 +138,27 @@ export class DataService {
     return result;
   }
 
-  async getVersionsReal(app, env, platform): Promise<any> {
-    var uat = "http://localhost:5001/pgyer-enhance/us-central1/appdownload/versions";
-    var prd = "https://us-central1-aigensstoretest.cloudfunctions.net/appdownload/versions";
+
+  getHost() {
+    var uat = "http://localhost:5001/pgyer-enhance/us-central1/appdownload";
+    var prd = "https://us-central1-aigensstoretest.cloudfunctions.net/appdownload";
     const host = location.hostname;
-    var url = (host == 'localhost' || host.startsWith('192.168.')) ? uat : prd;
+    return (host == 'localhost' || host.startsWith('192.168.')) ? uat : prd;
+  }
+
+  async getVersionsReal(app, env, platform): Promise<any> {
+    var url = this.getHost() + "/versions";
     return this.getPromise(url + `?t=${new Date().getTime()}`, { app, env, platform });
   }
 
   async deleteVersionReal(app, env, platform, buildKeys: string[]): Promise<any> {
-    var uat = "http://localhost:5001/pgyer-enhance/us-central1/appdownload/deleteversions";
-    var prd = "https://us-central1-aigensstoretest.cloudfunctions.net/appdownload/deleteversions";
-    const host = location.hostname;
-    var url = (host == 'localhost' || host.startsWith('192.168.')) ? uat : prd;
-    return this.postPromise(url + `?t=${new Date().getTime()}`, { app, env, platform, buildKeys });
+    var url = this.getHost() + "/deleteversions";
+    return this.postPromise(url, { app, env, platform, buildKeys });
   }
+
+  async updateAppInfoReal(app, env, platform, buildKey, buildUpdateDescription): Promise<any> {
+    var url = this.getHost() + "/updateAppInfo";
+    return this.postPromise(url, { app, env, platform, buildKey, buildUpdateDescription });
+  }
+
 }

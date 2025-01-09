@@ -1,0 +1,74 @@
+:host {
+  width: 100%;
+  margin-right: 0.3rem;
+}
+
+.update-text-box {
+  // padding: 15px;
+  // border: 1px solid #ddd;
+  // border-radius: 6px;
+  // background-color: #fafafa;
+  // margin: 20px 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  // 包含标题与按钮的容器
+  >div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px; // 分隔文本框和上述内容
+  }
+
+  p {
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0; // 移除默认边距
+  }
+  .text {
+    white-space: pre-wrap;
+  }
+
+  button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #1abc9c;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #1abc9c;
+    }
+
+    &:not(:last-child) {
+      margin-right: 8px; // 按钮之间的间距
+      background-color: #1abc9c;
+    }
+  }
+
+  textarea {
+    // width: 100%;
+    min-height: 100px; // 设置最小高度
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    // padding: 8px;
+    font-size: 14px;
+    resize: none; // 禁止手动调整大小
+    transition: border-color 0.3s;
+
+    &:focus {
+      border-color: #1abc9c;
+      outline: none; // 移除默认的焦点轮廓
+    }
+  }
+
+  span {
+    display: inline-block;
+    font-size: 14px;
+    color: #333;
+  }
+}

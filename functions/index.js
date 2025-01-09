@@ -11,7 +11,7 @@ const functions = require('firebase-functions');
 const express = require('express');
 const cors = require('cors');
 
-const { getDeviceConfig, getAllVersions, deleteVersion } = require('./http');
+const { getDeviceConfig, getAllVersions, deleteVersion, updateAppInfo } = require('./http');
 
 const app = express();
 
@@ -186,5 +186,47 @@ app.post('/deleteversions', async (req, res) => {
   handleVersion(res, platform, env, app);
 
 });
+
+// xxx/updateAppInfo?platform=xx&env=xxx&app=xxx
+app.post('/updateAppInfo', async (req, res) => {
+  const body = req.body || {};
+  const platform = body.platform;
+  const env = body.env;
+  const app = body.app;
+  const buildKey = body.buildKey || "";
+  const buildUpdateDescription = body.buildUpdateDescription || "";
+
+  if (!_deviceData) {
+    var rsp = await getDeviceConfig()
+    _deviceData = rsp?.data?.data || null;
+  }
+
+  if (!_deviceData) {
+    return "";
+  }
+
+  var apiKey = _deviceData?.defaultPgyerApiKey;
+  const projects = _deviceData?.projects || [];
+  const appObj = projects.find(p => p.name === app);
+  if (!appObj) {
+    return "";
+  }
+  const currentAppInfo = appObj?.['pgyer']?.[platform]?.[env];
+  apiKey = currentAppInfo?.apiKey || apiKey;
+
+  if (!apiKey) {
+    returnError(res, "apiKey not found");
+    return;
+  }
+
+  const userKey = currentAppInfo?.userKey || _deviceData?.defaultPgyerUserKey;
+
+  const result = await updateAppInfo(apiKey, userKey, buildKey, buildUpdateDescription);
+
+  res.json({ data: result });
+
+});
+
+
 
 exports.appdownload = functions.https.onRequest(app);

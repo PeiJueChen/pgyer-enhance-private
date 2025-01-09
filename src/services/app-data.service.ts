@@ -20,9 +20,18 @@ export class AppDataService {
   href;
   dataKey = "DATA_KEY";
   appKey = "PAYGER_APP_KEY";
+  isAigensUser = false;
   constructor(public platformService: Platform, private dataService: DataService) {
 
   }
+
+  public setIsAigensUser(isAigensUser: boolean) {
+    this.isAigensUser = isAigensUser;
+  }
+  public getIsAigensUser() {
+    return this.isAigensUser;
+  }
+
 
   private base64Decode(str: string) {
     return atob(str);

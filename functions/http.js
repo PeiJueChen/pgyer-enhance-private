@@ -226,11 +226,28 @@ const deleteVersion = async (apiKey, buildKey) => {
   return rsp;
 }
 
+const updateAppInfo = async (apiKey, userKey, buildKey, buildUpdateDescription) => {
+  const host = "https://www.pgyer.com";
+  // https://www.pgyer.com/apiv2/app/builds?_api_key=0202f5206763d902070f95c7826cb794&appKey=f10fc35f8027b9674d3979977a9972d0&channelKey=88dc901e6112b228f0c62833706d7b06&page=1
+  const url = host + "/apiv2/app/updateApp";
+
+  try {
+    if (!buildUpdateDescription) buildUpdateDescription = "";
+    var rsp = await post(url, { _api_key: apiKey, userKey, buildKey, buildUpdateDescription })
+  } catch (error) {
+    rsp = {};
+  }
+  return rsp;
+}
+
+
+
 module.exports = {
   getDeviceConfig,
   get,
   post,
   post2,
   getAllVersions,
-  deleteVersion
+  deleteVersion,
+  updateAppInfo
 }

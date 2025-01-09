@@ -8,18 +8,21 @@ import { AppHeaderItemComponent } from '../components/app-header-item/app-header
 import { AppItemComponent } from '../components/app-item/app-item.component';
 import { BytesToMBPipe, DateFormatPipe } from '../pipes/DataPipe.pipe';
 import { PlatformModule } from '@angular/cdk/platform';
+import { AppUpdateTextComponent } from '../components/app-update-text/app-update-text.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AppHeaderItemComponent,
     AppItemComponent,
+    AppUpdateTextComponent,
     BytesToMBPipe,
     DateFormatPipe
   ],
   exports: [
     AppHeaderItemComponent,
     AppItemComponent,
+    AppUpdateTextComponent,
     BytesToMBPipe,
     DateFormatPipe,
   ],

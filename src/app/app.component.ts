@@ -36,10 +36,10 @@ export class AppComponent {
         console.error(err)
       })
 
-      const v = document.getElementById('app-version');
-      if (v) {
-        v.innerHTML = `v${this.version}`;
-      }
+    const v = document.getElementById('app-version');
+    if (v) {
+      v.innerHTML = `v${this.version}`;
+    }
   }
 
   // https://pgyer-enhance.web.app/app/bksg?env=uat&platform=android
@@ -90,14 +90,14 @@ export class AppComponent {
           const obj = this.appDataService.getLocal(this.appDataService.appKey);
           if (obj?.href == window.location.href) {
             window.location.reload();
-          }else {
+          } else {
             this.appDataService.setLocal(this.appDataService.appKey, null);
             this.dataService.showAlert('Error', 'No versions found for this app.');
           }
 
           return;
         }
-        this.appDataService.setLocal(this.appDataService.appKey, {href: window.location.href});
+        this.appDataService.setLocal(this.appDataService.appKey, { href: window.location.href });
         this.appIcon = this.appDataService.realVerions[0]?.realIcon;
         this.appName = this.appDataService.realVerions[0]?.buildName;
       } catch (error: any) {
@@ -192,5 +192,29 @@ export class AppComponent {
 
   onSubmit() {
     this.showPasswordForm = this.password != this.appDataService.currentAppInfo?.buildPassword;
+  }
+
+
+  lastClickedVersion: number = 0;
+  clickCountVersion: number = 0;
+  clickedLogo(e) {
+    var diff = e?.timeStamp - this.lastClickedVersion;
+    if (diff < 1000) {
+      this.clickCountVersion++;
+    }
+    this.lastClickedVersion = e?.timeStamp;
+    if (this.clickCountVersion > 5) {
+      this.clickCountVersion = 0;
+      this._clickedLogo();
+    }
+  }
+  _clickedLogo() {
+    let userResponse = prompt("verify your identity to excecute this action");
+    if (!userResponse || userResponse != 'jason') {
+      alert("Please enter the correct password to execute this action");
+      return;
+    }
+    this.appDataService.setIsAigensUser(true);
+    this.showPasswordForm = false;
   }
 }
