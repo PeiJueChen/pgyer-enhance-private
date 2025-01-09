@@ -21,7 +21,8 @@ export class AppUpdateTextComponent implements OnInit {
   }
 
   edit() {
-    this.isEditing = true;
+    this.isEditing = !this.isEditing;
+    this.updateDescription = this.item?.buildUpdateDescription || '';
   }
 
   async save() {
