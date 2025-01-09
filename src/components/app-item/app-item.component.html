@@ -1,7 +1,11 @@
 <div *ngIf="appDataService?.itemVersions?.length" class="container">
-  <h3 class="app-name">Other versions of {{appName}} App </h3>
+  <div class="item-title">
+    <h3 class="app-name">Other versions of {{appName}} App </h3>
+    <div class="edit" (click)="editClicked($event);$event.stopPropagation();"></div>
+  </div>
   <div *ngFor="let item of displayedItems; let i = index" class="item">
     <div class="item-header" (click)="toggleItem(i)">
+      <input class="input-checkbox" type="checkbox" *ngIf="showCheckboxes" [(ngModel)]="item.isSelected" (click)="$event.stopPropagation();"/>
       <img [src]="item?.realIcon || 'https://www.pgyer.com/image/view/app_icons/'+item.buildIcon"class="item-icon" />
 
       <div class="item-info">
@@ -21,8 +25,13 @@
     </div>
   </div>
 
-  <div *ngIf="shownAllButton" class="all-versions-button-container" (click)="this.expendAll = !this.expendAll;clickAllVersions()">
-    <button class="all-versions-button">{{expendAll ? 'Show Less' : 'All Versions'}}</button>
+  <div *ngIf="shownAllButton" class="all-versions-button-container">
+    <button class="cancel-button" *ngIf="showCheckboxes" (click)="cancelSelectedVersions()">Cancel</button>
+    <button class="delete-button" *ngIf="showCheckboxes" (click)="deleteSelectedVersions()">
+      Delete
+      <span class="loading" *ngIf="showDelLoading"></span>
+    </button>
+    <button class="all-versions-button" (click)="this.expendAll = !this.expendAll;clickAllVersions()">{{expendAll ? 'Show Less' : 'All Versions'}}</button>
   </div>
 
 </div>

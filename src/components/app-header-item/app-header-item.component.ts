@@ -12,7 +12,7 @@ export class AppHeaderItemComponent implements OnInit {
 
   constructor(public appDataService: AppDataService, private dataService: DataService, public p: Platform) {
 
-   }
+  }
 
   item;
   qrcodeUrl;
@@ -43,6 +43,11 @@ export class AppHeaderItemComponent implements OnInit {
     }
     this.item.isDownloading = true;
     window.open(url, '_blank');
+
+    setTimeout(() => {
+      alert("The app is downloading, please check your phone")
+      this.item.isDownloading = false;
+    }, 6000);
   }
 
   retryDownload() {

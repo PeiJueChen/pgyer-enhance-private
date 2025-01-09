@@ -145,4 +145,12 @@ export class DataService {
     var url = (host == 'localhost' || host.startsWith('192.168.')) ? uat : prd;
     return this.getPromise(url + `?t=${new Date().getTime()}`, { app, env, platform });
   }
+
+  async deleteVersionReal(app, env, platform, buildKeys: string[]): Promise<any> {
+    var uat = "http://localhost:5001/pgyer-enhance/us-central1/appdownload/deleteversions";
+    var prd = "https://us-central1-aigensstoretest.cloudfunctions.net/appdownload/deleteversions";
+    const host = location.hostname;
+    var url = (host == 'localhost' || host.startsWith('192.168.')) ? uat : prd;
+    return this.postPromise(url + `?t=${new Date().getTime()}`, { app, env, platform, buildKeys });
+  }
 }

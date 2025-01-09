@@ -123,6 +123,7 @@ export class AppComponent {
     const realVerions = versions.filter(version => {
       version.realIcon = realIcon || `https://www.pgyer.com/image/view/app_icons/${version.buildIcon}`;
       realIcon = version.realIcon;
+      version.isSelected = false;
       return (version?.buildUpdateDescription || UAT_ENV).includes(envStr);
     })
     this.appDataService.realVerions = realVerions;

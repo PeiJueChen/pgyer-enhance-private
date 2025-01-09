@@ -1,5 +1,6 @@
 import { Platform } from '@angular/cdk/platform';
 import { Injectable } from '@angular/core';
+import { DataService } from './data-service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +20,18 @@ export class AppDataService {
   href;
   dataKey = "DATA_KEY";
   appKey = "PAYGER_APP_KEY";
-  constructor(public platformService: Platform) {
+  constructor(public platformService: Platform, private dataService: DataService) {
 
+  }
+
+  private base64Decode(str: string) {
+    return atob(str);
+  }
+
+  handleVersions(rsp) {
+    const realVerions = JSON.parse(decodeURIComponent(this.base64Decode(rsp?.versions.replace("S1JeBfseDESE", ""))));
+    this.realVerions = realVerions;
+    this.itemVersions = [...realVerions].splice(1);
   }
 
   setLocal(key: string, object: any) {

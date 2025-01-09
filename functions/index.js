@@ -11,7 +11,7 @@ const functions = require('firebase-functions');
 const express = require('express');
 const cors = require('cors');
 
-const { getDeviceConfig, getAllVersions } = require('./http');
+const { getDeviceConfig, getAllVersions, deleteVersion } = require('./http');
 
 const app = express();
 
@@ -95,12 +95,29 @@ app.get('/init', async (req, res) => {
   `
   res.send(r);
 });
-// xxx/versions?platform=xx&env=xxx&app=xxx
-app.get('/versions', async (req, res) => {
-  const query = req.query || {};
-  const platform = query.platform;
-  const env = query.env;
-  const app = query.app;
+
+const getCurrentApiKey = async (platform, env, app) => {
+  if (!_deviceData) {
+    var rsp = await getDeviceConfig()
+    _deviceData = rsp?.data?.data || null;
+  }
+
+  if (!_deviceData) {
+    return "";
+  }
+
+  var apiKey = _deviceData?.defaultPgyerApiKey;
+  const projects = _deviceData?.projects || [];
+  const appObj = projects.find(p => p.name === app);
+  if (!appObj) {
+    return "";
+  }
+  const currentAppInfo = appObj?.['pgyer']?.[platform]?.[env];
+  apiKey = currentAppInfo?.apiKey || apiKey;
+  return apiKey;
+}
+
+const handleVersion = async (res, platform, env, app) => {
   if (!platform || !env || !app) {
     returnError(res, 'missing parameters');
   }
@@ -127,25 +144,47 @@ app.get('/versions', async (req, res) => {
     returnError(res, "app version not found");
     return;
   }
-  const pgyerOriginalLink = !!currentAppInfo?.channel ? `https://www.pgyer.com/${currentAppInfo?.channel}` : '';
   apiKey = currentAppInfo?.apiKey || apiKey;
-  const buildPassword = currentAppInfo?.buildPassword;
   const appKey = currentAppInfo?.appKey;
-  delete currentAppInfo.appKey;
-  delete currentAppInfo.channel;
-  // const base64 = (str) => {
-  //   const buffer = Buffer.from(str, 'utf-8');
-  //   return buffer.toString('base64');
-  // }
-  // if (buildPassword) {
-  //   currentAppInfo.buildPassword = base64(buildPassword + "@igens!");
-  // }
-  // currentAppInfo['pgyerOriginalLink'] = pgyerOriginalLink;
+
   const versions = await getAllVersions(apiKey, appKey, 1, env);
-  // currentAppInfo['versions'] = versions;
 
   res.json({ versions: "S1JeBfseDESE" + base64(encodeURIComponent(JSON.stringify(versions))) });
+}
+
+// xxx/versions?platform=xx&env=xxx&app=xxx
+app.get('/versions', async (req, res) => {
+  const query = req.query || {};
+  const platform = query.platform;
+  const env = query.env;
+  const app = query.app;
+
+  handleVersion(res, platform, env, app);
+
 });
 
+// xxx/versions?platform=xx&env=xxx&app=xxx
+app.post('/deleteversions', async (req, res) => {
+  const body = req.body || {};
+  const platform = body.platform;
+  const env = body.env;
+  const app = body.app;
+  const buildKeys = body.buildKeys || [];
+  const apiKey = await getCurrentApiKey(platform, env, app);
+  if (!apiKey) {
+    returnError(res, "apiKey not found");
+    return;
+  }
+
+  for (const buildKey of buildKeys) {
+    const rsp = await deleteVersion(apiKey, buildKey);
+    // { code: 0, message: 'no data', data: '' }
+    await new Promise(resolve => setTimeout(resolve, 10));
+  }
+
+
+  handleVersion(res, platform, env, app);
+
+});
 
 exports.appdownload = functions.https.onRequest(app);
