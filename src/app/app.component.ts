@@ -22,6 +22,8 @@ export class AppComponent {
   constructor(private dataService: DataService, public appDataService: AppDataService, public p: Platform) {
     this.href = decodeURIComponent(window.location.href);
     this.appDataService.href = window.location.href;
+    const linkVersions = this.appDataService.href.split('#')[1];
+    this.appDataService.linkVersions = (linkVersions && linkVersions?.split(',')) || [];
     if (!this.getValue('app')) {
       this.dataService.showAlert("Error", "missing app parameter");
     } else {
@@ -84,8 +86,7 @@ export class AppComponent {
       try {
         const rsp = await this.dataService.getVersionsReal(this.appDataService.app, this.appDataService.env, this.appDataService.platform);
         const realVerions = JSON.parse(decodeURIComponent(this.base64Decode(rsp?.versions.replace("S1JeBfseDESE", ""))));
-        this.appDataService.realVerions = realVerions;
-        this.appDataService.itemVersions = [...realVerions].splice(1);
+        this.appDataService.setVersions(realVerions);
         if (!this.appDataService.realVerions || this.appDataService.realVerions.length === 0) {
           const obj = this.appDataService.getLocal(this.appDataService.appKey);
           if (obj?.href == window.location.href) {

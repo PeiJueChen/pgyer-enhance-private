@@ -21,6 +21,7 @@ export class AppDataService {
   dataKey = "DATA_KEY";
   appKey = "PAYGER_APP_KEY";
   isAigensUser = false;
+  linkVersions: any[] = [];
   constructor(public platformService: Platform, private dataService: DataService) {
 
   }
@@ -37,6 +38,15 @@ export class AppDataService {
     return atob(str);
   }
 
+  setVersions(realVerions: any[]) {
+    if (this.linkVersions.length > 0) {
+        this.realVerions = realVerions.filter(item => this.linkVersions.includes(item?.buildVersion));
+        this.itemVersions = [...this.realVerions].splice(1);
+    }else {
+      this.realVerions = realVerions;
+      this.itemVersions = [...realVerions].splice(1);
+    }
+  }
   handleVersions(rsp) {
     const realVerions = JSON.parse(decodeURIComponent(this.base64Decode(rsp?.versions.replace("S1JeBfseDESE", ""))));
     this.realVerions = realVerions;
