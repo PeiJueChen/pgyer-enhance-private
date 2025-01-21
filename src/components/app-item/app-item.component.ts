@@ -81,6 +81,7 @@ export class AppItemComponent implements OnInit {
   }
   _editClicked() {
     this.showCheckboxes = true;
+    this.shownAllButton = true;
     // show select box
   }
   async deleteSelectedVersions() {
