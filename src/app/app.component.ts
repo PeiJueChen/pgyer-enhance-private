@@ -20,6 +20,10 @@ export class AppComponent {
   appName = "loading...";
   version = environment.version;
   constructor(private dataService: DataService, public appDataService: AppDataService, public p: Platform) {
+    if (!Object['fromEntries']) {
+      Object['fromEntries'] = this.fromEntries;
+    }
+
     this.href = decodeURIComponent(window.location.href);
     this.appDataService.href = window.location.href;
     const linkVersions = this.appDataService.href.split('#')[1];
@@ -42,6 +46,13 @@ export class AppComponent {
     if (v) {
       v.innerHTML = `v${this.version}`;
     }
+  }
+
+  fromEntries(iterable) {
+    return [...iterable].reduce((obj, [key, val]) => {
+      obj[key] = val
+      return obj
+    }, {})
   }
 
   // https://pgyer-enhance.web.app/app/bksg?env=uat&platform=android
