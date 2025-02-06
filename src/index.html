@@ -44,37 +44,48 @@
   </script>
 
   <script>
-    (function (d) {
-      script = d.createElement('script');
-      script.type = 'text/javascript';
-      script.defer = true;
-      script.onload = function () {
-        if (window['bootstrap']) window['bootstrap']();
-      };
-      script.onerror = function () {
-        document.getElementById("reload").style.display = "block";
-      };
+      (function (d) {
+        script = d.createElement('script');
+        script.type = 'text/javascript';
+        script.defer = true;
+        script.onload = function () {
+          if (window['bootstrap']) window['bootstrap']();
+        };
+        script.onerror = function () {
+          document.getElementById("reload").style.display = "block";
+          if (document.getElementById('unsupported-browser')) {
+            document.getElementById('unsupported-browser').style.display = 'none';
+          }
+        };
 
-      const hostList = {};
+        const hostList = {};
 
-      var referer = location.href;
-      var uat = "http://localhost:5001/pgyer-enhance/us-central1/appdownload/init";
-      var prd = "https://us-central1-aigensstoretest.cloudfunctions.net/appdownload/init";
-      const host = location.hostname;
-      var url = (host == 'localhost' || host.startsWith('192.168.')) ? uat : prd;
-      script.src = url + "?referer=" + encodeURIComponent(referer);
-      d.getElementsByTagName('head')[0].appendChild(script);
+        var referer = location.href;
+        var uat = "http://localhost:5001/pgyer-enhance/us-central1/appdownload/init";
+        var prd = "https://us-central1-aigensstoretest.cloudfunctions.net/appdownload/init";
+        const host = location.hostname;
+        var url = (host == 'localhost' || host.startsWith('192.168.')) ? uat : prd;
+        script.src = url + "?referer=" + encodeURIComponent(referer);
+        d.getElementsByTagName('head')[0].appendChild(script);
 
-      // document.addEventListener('visibilitychange', function () {
-      //   if (!document.hidden) {
-      //     location.reload();
-      //   }
-      // });
+        // document.addEventListener('visibilitychange', function () {
+        //   if (!document.hidden) {
+        //     location.reload();
+        //   }
+        // });
 
-    }(document));
+      }(document));
 
   </script>
 
+  <script>
+    function handleUnsupportedBrowsers() {
+      var appRoot = document.getElementsByTagName('app-root')[0];
+      if (appRoot && appRoot.innerHTML === '' && document.getElementById('unsupported-browser')) {
+         document.getElementById('unsupported-browser').style.display = 'block';
+      }
+    }
+  </script>
 
   <style>
     body {
@@ -104,10 +115,14 @@
   </style>
 </head>
 
-<body>
+<body onload="handleUnsupportedBrowsers()">
   <div class="navbar-notch"></div>
   <app-root></app-root>
   <div id="reload" style="display: none;">Please reload again</div>
+  <div id="unsupported-browser" style="display: none;">
+    <h1>Unsupported Browser (too old)</h1>
+    <p>Please use a modern browser!</p>
+  </div>
 </body>
 
 </html>
