@@ -61,7 +61,7 @@ export class AppItemComponent implements OnInit {
     window.open(url, '_blank');
 
     setTimeout(() => {
-      alert("The app is downloading, please check your phone")
+      alert("The app is downloading, please check your phone. If download failed, please click the try again button.")
       item.isDownloading = false;
     }, 6000);
   }
