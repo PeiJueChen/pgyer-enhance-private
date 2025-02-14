@@ -80,9 +80,24 @@
 
   <script>
     function handleUnsupportedBrowsers() {
+      var userAgent = navigator.userAgent;
+      var chromeVersion = userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
       var appRoot = document.getElementsByTagName('app-root')[0];
-      if (appRoot && appRoot.innerHTML === '' && document.getElementById('unsupported-browser')) {
-         document.getElementById('unsupported-browser').style.display = 'block';
+      if ((!appRoot || appRoot.innerHTML === '' || (chromeVersion && chromeVersion[2] <= 83)) && document.getElementById('unsupported-browser')) {
+        document.getElementById('unsupported-browser').style.display = 'block';
+        var currentUrl = decodeURIComponent(location.href);
+        if (~currentUrl.indexOf("app/universal-app")) {
+          document.getElementById('original-link').style.display = 'block';
+          var isUat = ~currentUrl.indexOf("env=uat");
+          setTimeout(() => {
+            var a = document.getElementById('open-original-link');
+            if (a) {
+              a.href = isUat ? "https://www.pgyer.com/a-universal-and-uat" : "https://www.pgyer.com/a-universal-and-prd";
+            }
+          }, 1000);
+        } else {
+          document.getElementById('upgrade').style.display = 'block';
+        }
       }
     }
   </script>
@@ -113,6 +128,27 @@
       margin-top: 3rem;
     }
   </style>
+  <style>
+    #unsupported-browser {
+      display: block;
+      z-index: 9999;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      background: #1abc9c;
+    }
+
+    #unsupported-browser .content {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      text-align: center;
+    }
+  </style>
 </head>
 
 <body onload="handleUnsupportedBrowsers()">
@@ -120,8 +156,15 @@
   <app-root></app-root>
   <div id="reload" style="display: none;">Please reload again</div>
   <div id="unsupported-browser" style="display: none;">
-    <h1>Unsupported Browser (too old)</h1>
-    <p>Please use a modern browser!</p>
+    <div class="content">
+      <div id="original-link" style="display: none;">
+        <p>Your browser version is too old, please click the button below to open the original link</p>
+        <a target="_blank" id="open-original-link">Open original link</a>
+      </div>
+      <div id="upgrade" style="display: none;">
+        <p>Your browser version is too old, please upgrade to the latest version</p>
+      </div>
+    </div>
   </div>
 </body>
 
