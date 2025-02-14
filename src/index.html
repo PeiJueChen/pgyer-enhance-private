@@ -85,10 +85,14 @@
       var appRoot = document.getElementsByTagName('app-root')[0];
       if ((!appRoot || appRoot.innerHTML === '' || (chromeVersion && chromeVersion[2] <= 83)) && document.getElementById('unsupported-browser')) {
         document.getElementById('unsupported-browser').style.display = 'block';
-        var currentUrl = decodeURIComponent(location.href);
-        if (~currentUrl.indexOf("app/universal-app")) {
+        try {
+          var currentUrl = decodeURIComponent(location.href);
+        } catch (error) {
+          currentUrl = location.href;
+        }
+        if (~currentUrl.indexOf("universal-app")) {
           document.getElementById('original-link').style.display = 'block';
-          var isUat = ~currentUrl.indexOf("env=uat");
+          var isUat = ~currentUrl.indexOf("env=uat") || ~currentUrl.indexOf("env53Duat");;
           setTimeout(() => {
             var a = document.getElementById('open-original-link');
             if (a) {
