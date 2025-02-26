@@ -82,8 +82,7 @@
     function handleUnsupportedBrowsers() {
       var userAgent = navigator.userAgent;
       var chromeVersion = userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
-      var appRoot = document.getElementsByTagName('app-root')[0];
-      if ((!appRoot || appRoot.innerHTML === '' || (chromeVersion && chromeVersion[2] <= 83)) && document.getElementById('unsupported-browser')) {
+      if (((chromeVersion && chromeVersion[2] <= 83)) && document.getElementById('unsupported-browser')) {
         document.getElementById('unsupported-browser').style.display = 'block';
         try {
           var currentUrl = decodeURIComponent(location.href);
