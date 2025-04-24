@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppDataService } from '../../services/app-data.service';
 import { DataService } from '../../services/data-service';
+import { SubscribeService } from '../../services/subscribe.service';
 
 @Component({
   selector: 'app-app-item',
@@ -10,7 +11,7 @@ import { DataService } from '../../services/data-service';
 export class AppItemComponent implements OnInit {
 
   expandedItemIndex: number | null = null;
-  constructor(public appDataService: AppDataService, private dataService: DataService) { }
+  constructor(public appDataService: AppDataService, private dataService: DataService, private subscribeService: SubscribeService) { }
   displayedItems: any[] = [];
   shownAllButton = false;
   expendAll = false;
@@ -20,9 +21,14 @@ export class AppItemComponent implements OnInit {
   showCheckboxes: boolean = false;
   ngOnInit() {
     this.init();
+    this.subscribeService.getObservable('versionsChanged').subscribe(versions => {
+        this.init();
+        this.cancelSelectedVersions();
+        this.showDelLoading = false;
+    })
   }
   init() {
-    this.displayedItems = this.appDataService.itemVersions.slice(0, 6);
+    this.displayedItems = this.appDataService?.itemVersions?.slice(0, 6);
     this.shownAllButton = this.appDataService?.itemVersions.length > 6;
     this.appName = this.displayedItems?.[0]?.buildName;
     this.expendAll = false;
@@ -93,7 +99,7 @@ export class AppItemComponent implements OnInit {
     }
     try {
       let userResponse = prompt("Are you sure to delete the selected versions?");
-      if (!userResponse || userResponse != 'jason') {
+      if (userResponse && userResponse != 'jason') {
         alert("Please enter the correct password to delete the selected versions");
         return;
       }

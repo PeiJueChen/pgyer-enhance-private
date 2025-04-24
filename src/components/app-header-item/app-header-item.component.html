@@ -2,7 +2,7 @@
   <div class="icon">
     <img [src]="item?.realIcon || 'https://www.pgyer.com/image/view/app_icons/'+item.buildIcon" />
   </div>
-  <h3 class="name">{{item.buildName}}</h3>
+  <h3 (click)="deleteItem($event);$event.stopPropagation();" class="name">{{item.buildName}}</h3>
   <div class="device-name-container">
     <p class="device-name">
       <img src="assets/images/ios.svg" *ngIf="appDataService.platform == 'ios'" class="platform-icon" />

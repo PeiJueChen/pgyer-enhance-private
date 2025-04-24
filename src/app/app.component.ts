@@ -222,7 +222,7 @@ export class AppComponent {
   }
   _clickedLogo() {
     let userResponse = prompt("verify your identity to excecute this action");
-    if (!userResponse || userResponse != 'jason') {
+    if (userResponse && userResponse != 'jason') {
       alert("Please enter the correct password to execute this action");
       return;
     }
