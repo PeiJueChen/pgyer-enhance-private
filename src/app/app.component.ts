@@ -96,7 +96,17 @@ export class AppComponent {
     if (1) {
       try {
         const rsp = await this.dataService.getVersionsReal(this.appDataService.app, this.appDataService.env, this.appDataService.platform);
-        const realVerions = JSON.parse(decodeURIComponent(this.base64Decode(rsp?.versions.replace("S1JeBfseDESE", ""))));
+        let realVerions = JSON.parse(decodeURIComponent(this.base64Decode(rsp?.versions.replace("S1JeBfseDESE", ""))));
+        if (realVerions?.length > 0) {
+          realVerions = realVerions.filter(version => {
+            const buildUpdateDescription = version.buildUpdateDescription;
+            if (buildUpdateDescription.includes('\n')) {
+              const lines = buildUpdateDescription.split('\n');
+              return lines[0].trim().includes(this.appDataService.env);
+            }
+            return true;
+          })
+        }
         this.appDataService.setVersions(realVerions);
         if (!this.appDataService.realVerions || this.appDataService.realVerions.length === 0) {
           const obj = this.appDataService.getLocal(this.appDataService.appKey);
