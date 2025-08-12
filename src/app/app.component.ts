@@ -99,8 +99,8 @@ export class AppComponent {
         let realVerions = JSON.parse(decodeURIComponent(this.base64Decode(rsp?.versions.replace("S1JeBfseDESE", ""))));
         if (realVerions?.length > 0) {
           realVerions = realVerions.filter(version => {
-            const buildUpdateDescription = version.buildUpdateDescription;
-            if (buildUpdateDescription.includes('\n')) {
+            const buildUpdateDescription = version?.buildUpdateDescription;
+            if (buildUpdateDescription?.includes('\n')) {
               const lines = buildUpdateDescription.split('\n');
               return lines[0].trim().includes(this.appDataService.env);
             }
