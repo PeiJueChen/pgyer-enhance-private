@@ -48,7 +48,17 @@ export class AppDataService {
     }
   }
   handleVersions(rsp) {
-    const realVerions = JSON.parse(decodeURIComponent(this.base64Decode(rsp?.versions.replace("S1JeBfseDESE", ""))));
+    let realVerions = JSON.parse(decodeURIComponent(this.base64Decode(rsp?.versions.replace("S1JeBfseDESE", ""))));
+    if (realVerions?.length > 0) {
+      realVerions = realVerions.filter(version => {
+        const buildUpdateDescription = version?.buildUpdateDescription;
+        if (buildUpdateDescription?.includes('\n')) {
+          const lines = buildUpdateDescription.split('\n');
+          return lines[0].trim().includes(this.env);
+        }
+        return true;
+      })
+    }
     this.realVerions = realVerions;
     this.itemVersions = [...realVerions].splice(1);
   }
