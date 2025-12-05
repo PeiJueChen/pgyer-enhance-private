@@ -22,9 +22,9 @@ export class AppItemComponent implements OnInit {
   ngOnInit() {
     this.init();
     this.subscribeService.getObservable('versionsChanged').subscribe(versions => {
-        this.init();
-        this.cancelSelectedVersions();
-        this.showDelLoading = false;
+      this.init();
+      this.cancelSelectedVersions();
+      this.showDelLoading = false;
     })
   }
   init() {
@@ -121,5 +121,22 @@ export class AppItemComponent implements OnInit {
     this.displayedItems.forEach(item => {
       item.isSelected = false;
     });
+  }
+
+  async downloadIpa(item) {
+    try {
+      if (!item?.buildKey) return;
+      const r: any = await this.dataService.getIosInternalDownloadUrl(item.buildKey);
+      const url = r?.result?.url;
+      if (!url) return;
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = item?.buildName || 'ios' + '.ipa';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    } catch (error) {
+      console.log('downloadIpa error:', error);
+
+    }
   }
 }

@@ -91,4 +91,21 @@ export class AppHeaderItemComponent implements OnInit {
       this.dataService.showAlert('Error', error?.message);
     }
   }
+
+  async downloadIpa(item) {
+    try {
+      if (!item?.buildKey) return;
+      const r: any = await this.dataService.getIosInternalDownloadUrl(item.buildKey);
+      const url = r?.result?.url;
+      if (!url) return;
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = item?.buildName || 'ios' + '.ipa';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    } catch (error) {
+      console.log('downloadIpa error:', error);
+
+    }
+  }
 }

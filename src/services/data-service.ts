@@ -161,4 +161,9 @@ export class DataService {
     return this.postPromise(url, { app, env, platform, buildKey, buildUpdateDescription });
   }
 
+  async getIosInternalDownloadUrl(buildKey: string): Promise<any> {
+    var url = this.getHost() + "/iosInternalDownloadUrl";
+    return this.getPromise(url + `?buildKey=${buildKey}`);
+  }
+
 }

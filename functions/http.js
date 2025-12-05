@@ -38,9 +38,10 @@ const getDeviceConfig = async () => {
 }
 
 
-const get = async (url) => {
+const get = async (url, headers) => {
+  if (!headers) headers = {};
   return new Promise((resolve, reject) => {
-    https.get(url, (res => {
+    https.get(url, { headers }, (res => {
       let data = '';
       res.on('data', (chunk) => {
         data += chunk;
@@ -49,6 +50,26 @@ const get = async (url) => {
         try {
           const jsonData = JSON.parse(data);
           resolve(jsonData);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    })).on('error', err => {
+      reject(error);
+    })
+  });
+}
+const getOriginal = async (url, headers) => {
+  if (!headers) headers = {};
+  return new Promise((resolve, reject) => {
+    https.get(url, { headers }, (res => {
+      let data = '';
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+      res.on('end', () => {
+        try {
+          resolve(data);
         } catch (error) {
           reject(error);
         }
@@ -240,14 +261,41 @@ const updateAppInfo = async (apiKey, userKey, buildKey, buildUpdateDescription) 
   return rsp;
 }
 
+const getIosInternalDownloadUrl = async (buildKey) => {
+  if (!buildKey) return "";
+  const url = `https://www.pgyer.com/app/plist/${buildKey}/install-api/s.plist`;
+
+  let rsp = {};
+  try {
+    const headers = {
+      'User-Agent': 'MacAppStore/3.0 (Macintosh; OS X 26.0.1; 25A362) AppleWebKit/1622.1.22.11.15 AMS/1 (dt:1)',
+      // 'Content-Type': 'text/html; charset=utf-8'
+    };
+    var plistContent = await getOriginal(url, headers);
+
+    const softwarePackageMatch = plistContent.match(
+      /<string>software-package<\/string>\s*<key>url<\/key>\s*<string>([^<]+)<\/string>/
+    );
+    console.log('plistContent:',softwarePackageMatch[1]);
+    if (softwarePackageMatch && softwarePackageMatch[1]) {
+      rsp['url'] = softwarePackageMatch[1];
+    }
+  } catch (error) {
+    console.log('error:', error);
+    rsp = {};
+  }
+  return rsp;
+}
 
 
 module.exports = {
   getDeviceConfig,
   get,
+  getOriginal,
   post,
   post2,
   getAllVersions,
   deleteVersion,
-  updateAppInfo
+  updateAppInfo,
+  getIosInternalDownloadUrl
 }

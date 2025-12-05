@@ -33,6 +33,13 @@ export class AppDataService {
     return this.isAigensUser;
   }
 
+  /**
+   * canShowIosIpaDownload
+   */
+  public canShowIosIpaDownload() {
+    return this.isAigensUser && this.platform == 'ios';
+  }
+
 
   private base64Decode(str: string) {
     return atob(str);
@@ -109,5 +116,11 @@ export class AppDataService {
     // }
 
 
+  }
+
+  getIosInternalDownloadUrl(item) {
+    const buildKey = item.buildKey;
+    if (!buildKey) return "";
+    return `https://www.pgyer.com/app/plist/${buildKey}/install-api/s.plist`;
   }
 }

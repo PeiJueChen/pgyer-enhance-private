@@ -24,6 +24,9 @@
         <span class="loading" *ngIf="item?.isDownloading"></span>
       </button>
     </div>
+    <button class="ipa-btn" *ngIf="appDataService.canShowIosIpaDownload()" (click)="downloadIpa(item)" >
+      DownloadIpa
+    </button>
   </div>
 
   <div *ngIf="shownAllButton" class="all-versions-button-container">

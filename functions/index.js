@@ -11,7 +11,7 @@ const functions = require('firebase-functions');
 const express = require('express');
 const cors = require('cors');
 
-const { getDeviceConfig, getAllVersions, deleteVersion, updateAppInfo } = require('./http');
+const { getDeviceConfig, getAllVersions, deleteVersion, updateAppInfo, getIosInternalDownloadUrl } = require('./http');
 
 const app = express();
 
@@ -151,6 +151,13 @@ const handleVersion = async (res, platform, env, app) => {
 
   res.json({ versions: "S1JeBfseDESE" + base64(encodeURIComponent(JSON.stringify(versions))) });
 }
+
+app.get('/iosInternalDownloadUrl', async (req, res) => {
+  const query = req.query || {};
+  const buildKey = query.buildKey || "";
+  const rsp = await getIosInternalDownloadUrl(buildKey);
+  res.json({ result: rsp });
+})
 
 // xxx/versions?platform=xx&env=xxx&app=xxx
 app.get('/versions', async (req, res) => {

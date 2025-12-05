@@ -22,6 +22,8 @@
   <button class="install-button" (click)="installApp()" [ngClass]="{'stay': item?.isDownloading}">Install <span
       class="loading" *ngIf="item?.isDownloading"></span></button>
 
+  <button class="install-button" *ngIf="appDataService.canShowIosIpaDownload()" (click)="downloadIpa(item)">DownloadIpa</button>
+
   <div class="info-container">
     <p class="info-title">About {{item.buildName}} App</p>
     <div class="info-list">
