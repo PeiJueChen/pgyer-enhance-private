@@ -92,6 +92,11 @@ export class AppComponent {
   //     "buildExtendsTimingDate": "0000-00-00 00:00:00",
   //     "buildDownloadCount": 0
   // }
+
+  onImgError() {
+    this.appIcon = '/assets/images/ai.png';
+  }
+
   private async getVersions() {
     if (1) {
       try {

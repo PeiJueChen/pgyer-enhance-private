@@ -20,6 +20,10 @@ export class AppHeaderItemComponent implements OnInit {
   ngOnInit() {
     this.init();
   }
+
+  onImgError() {
+    this.item && (this.item.realIcon = '/assets/images/ai.png');
+  }
   init() {
     if (!this.appDataService.realVerions || this.appDataService.realVerions.length === 0) {
       this.dataService.showAlert('Error', 'No versions found for this app.');

@@ -21,7 +21,7 @@
         <span>Use your mobile to scan the QR code to install </span>
         <div class="qrcode">
           <img [src]="qrcodeUrl">
-          <img *ngIf="appIcon" [src]="appIcon" class="qr-logo" />
+          <img *ngIf="appIcon" [src]="appIcon" (error)="onImgError()" class="qr-logo" />
         </div>
       </div>
     </form>

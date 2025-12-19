@@ -1,6 +1,6 @@
 <div class="app-header-item" [ngClass]="{'ios-header': p.IOS}">
   <div class="icon">
-    <img [src]="item?.realIcon || 'https://www.pgyer.com/image/view/app_icons/'+item.buildIcon" />
+    <img [src]="item?.realIcon || 'https://www.pgyer.com/image/view/app_icons/'+item.buildIcon" (error)="onImgError()" />
   </div>
   <h3 (click)="deleteItem($event);$event.stopPropagation();" class="name">{{item.buildName}}</h3>
   <div class="device-name-container">
@@ -17,7 +17,7 @@
   </div>
   <div class="qrcode">
     <img [src]="qrcodeUrl">
-    <img [src]="item?.realIcon || 'https://www.pgyer.com/image/view/app_icons/'+item.buildIcon" class="qr-logo" />
+    <img [src]="item?.realIcon || 'https://www.pgyer.com/image/view/app_icons/'+item.buildIcon" class="qr-logo" (error)="onImgError()" />
   </div>
   <button class="install-button" (click)="installApp()" [ngClass]="{'stay': item?.isDownloading}">Install <span
       class="loading" *ngIf="item?.isDownloading"></span></button>
