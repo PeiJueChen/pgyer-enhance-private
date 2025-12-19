@@ -4,7 +4,14 @@
     <div class="edit" (click)="editClicked($event);$event.stopPropagation();"></div>
   </div>
   <div *ngFor="let item of displayedItems; let i = index" class="item">
-    <div class="item-header" (click)="toggleItem(i)">
+    <div
+      class="item-header"
+      (click)="toggleItem(i)"
+      (mousedown)="onMouseDown(i, $event)"
+      (mousemove)="onMouseMove(i, $event)"
+      (mouseenter)="onMouseEnter(i, $event)"
+      [class.dragging]="isDragging && showCheckboxes"
+    >
       <input class="input-checkbox" type="checkbox" *ngIf="showCheckboxes" [(ngModel)]="item.isSelected" (click)="$event.stopPropagation();"/>
       <img [src]="item?.realIcon || 'https://www.pgyer.com/image/view/app_icons/'+item.buildIcon"class="item-icon" />
 
