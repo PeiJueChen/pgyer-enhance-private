@@ -210,6 +210,7 @@ const getAllVersions = async (apiKey, appKey, page, env) => {
   }
   const UAT_ENV = "Env: uat";
   const PRD_ENV = "Env: prd";
+  const excludeEnvs = ["uat-low", "prd-low"];
   const passEnv = env.toLocaleLowerCase();
   const getEnvString = () => {
     if (env) {
@@ -226,7 +227,9 @@ const getAllVersions = async (apiKey, appKey, page, env) => {
     if (passEnv != 'uat' && passEnv != 'prd') {
       return version?.buildUpdateDescription && version?.buildUpdateDescription.startsWith(env);
     }
-    return (version?.buildUpdateDescription || UAT_ENV).includes(envStr);
+    
+    console.log('version?.buildUpdateDescription:',passEnv);
+    return (version?.buildUpdateDescription || UAT_ENV).includes(envStr) && !excludeEnvs.find(e => (version?.buildUpdateDescription || UAT_ENV).includes(e));
   })
 
   allVersions = [];
