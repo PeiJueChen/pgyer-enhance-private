@@ -93,7 +93,7 @@ fi
 
 # 4. 确认推送分支
 if [ "$NEED_PUSH_BRANCHES" = true ]; then
-    read -p "$(echo -e ${YELLOW}是否推送这 $TOTAL_TO_PUSH 个分支到 GitLab (origin)? (y/n): ${NC})" -n 1 -r
+    read -p "$(echo -e "${YELLOW}是否推送这 $TOTAL_TO_PUSH 个分支到 GitLab (origin)? (y/n): ${NC}")" -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         PUSH_BRANCHES=true
@@ -166,7 +166,7 @@ if [ $TOTAL_NEW_TAGS -gt 0 ]; then
     done
     echo ""
     
-    read -p "$(echo -e ${YELLOW}是否推送这些新标签到 GitLab (origin)? (y/n): ${NC})" -n 1 -r
+    read -p "$(echo -e "${YELLOW}是否推送这些新标签到 GitLab (origin)? (y/n): ${NC}")" -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo -e "${BLUE}正在推送标签...${NC}"
