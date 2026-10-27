@@ -53,6 +53,10 @@ function getS3() {
   }
   s3Client = new S3Client({
     region: 'auto',
+    // Path-style keeps presigned URLs on the single-level account domain
+    // (bucket prefix in the path) — one fewer DNS label, more resilient to
+    // flaky resolvers that fail on multi-level wildcard subdomains.
+    forcePathStyle: true,
     endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
     credentials: { accessKeyId: R2_ACCESS_KEY_ID, secretAccessKey: R2_SECRET_ACCESS_KEY },
   });
