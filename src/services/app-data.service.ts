@@ -100,6 +100,9 @@ export class AppDataService {
 
   getDownloadUrl(item) {
 
+    // R2 builds must go through DataService.r2DownloadUrl (async signing).
+    if (item?.isR2) return "";
+
     const password = this.currentAppInfo?.buildPassword;
     const buildKey = item.buildKey;
     if (!buildKey) return "";

@@ -177,7 +177,35 @@ export class AppItemComponent implements OnInit {
     }
 
   }
-  installApp(item) {
+  async installApp(item) {
+    // R2 builds: fetch a signed url first (Android) or itms-services link (iOS).
+    if (item?.isR2) {
+      try {
+        item.isDownloading = true;
+        if (this.appDataService.platform === 'ios') {
+          const itmsUrl = await this.dataService.r2InstallPlist(item, this.appDataService.app);
+          if (!itmsUrl) {
+            this.dataService.showAlert('', 'the url is incorrect');
+            item.isDownloading = false;
+            return;
+          }
+          window.location.href = itmsUrl;
+        } else {
+          const url = await this.dataService.r2DownloadUrl(item.key);
+          if (!url) {
+            this.dataService.showAlert('', 'the url is incorrect');
+            item.isDownloading = false;
+            return;
+          }
+          window.open(url, '_blank');
+        }
+        setTimeout(() => { item.isDownloading = false; }, 6000);
+      } catch (error: any) {
+        item.isDownloading = false;
+        this.dataService.showAlert('Error', error?.message);
+      }
+      return;
+    }
     const url = this.appDataService.getDownloadUrl(item);
     if (!url) {
       this.dataService.showAlert('', 'the url is incorrect')
@@ -212,19 +240,22 @@ export class AppItemComponent implements OnInit {
   }
   async deleteSelectedVersions() {
 
-    const buildKeys = this.displayedItems.filter(item => item.isSelected).map(item => item.buildKey);
-    if (buildKeys.length === 0) {
+    const selectedItems = this.displayedItems.filter(item => item.isSelected);
+    if (selectedItems.length === 0) {
       alert("Please select at least one version to delete");
       return;
     }
     try {
       let userResponse = prompt("Are you sure to delete the selected versions?");
-      if (userResponse && userResponse != 'jason') {
+      if (!userResponse || userResponse != 'jason') {
         alert("Please enter the correct password to delete the selected versions");
         return;
       }
       this.showDelLoading = true;
-      const rsp = await this.dataService.deleteVersionReal(this.appDataService.app, this.appDataService.env, this.appDataService.platform, buildKeys);
+      // Mixed delete: routes pgyer / R2 builds to their own endpoints,
+      // then returns the refreshed merged list.
+      const rsp = await this.dataService.deleteMixedVersions(
+        this.appDataService.app, this.appDataService.env, this.appDataService.platform, selectedItems);
       this.appDataService.handleVersions(rsp);
       this.init();
       this.cancelSelectedVersions();
@@ -251,8 +282,13 @@ export class AppItemComponent implements OnInit {
   async downloadIpa(item) {
     try {
       if (!item?.buildKey) return;
-      const r: any = await this.dataService.getIosInternalDownloadUrl(item.buildKey);
-      const url = r?.result?.url;
+      let url = '';
+      if (item.isR2) {
+        url = await this.dataService.r2DownloadUrl(item.key);
+      } else {
+        const r: any = await this.dataService.getIosInternalDownloadUrl(item.buildKey);
+        url = r?.result?.url;
+      }
       if (!url) return;
       const a = document.createElement('a');
       a.href = url;

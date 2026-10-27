@@ -147,7 +147,9 @@ export class DataService {
   }
 
   async getVersionsReal(app, env, platform): Promise<any> {
-    var url = this.getHost() + "/versions";
+    // merged-versions combines legacy pgyer builds and new R2 builds,
+    // same response shape as the old /versions endpoint.
+    var url = this.getHost() + "/r2/merged-versions";
     return this.getPromise(url + `?t=${new Date().getTime()}`, { app, env, platform });
   }
 
@@ -164,6 +166,63 @@ export class DataService {
   async getIosInternalDownloadUrl(buildKey: string): Promise<any> {
     var url = this.getHost() + "/iosInternalDownloadUrl";
     return this.getPromise(url + `?buildKey=${buildKey}`);
+  }
+
+  // ---- R2 endpoints ----
+
+  /** Signed download URL for an R2 build (use item.key from merged-versions). */
+  async r2DownloadUrl(key: string): Promise<string> {
+    const url = this.getHost() + "/r2/download-url";
+    const rsp: any = await this.getPromise(url, { key });
+    return rsp?.url || '';
+  }
+
+  /** iOS OTA install link (itms-services://) for an R2 build. */
+  /** item carries buildKey/platform/env from merged-versions; app avoids the server-side scan. */
+  async r2InstallPlist(item: any, app: string): Promise<string> {
+    const url = this.getHost() + "/r2/install-plist";
+    const rsp: any = await this.getPromise(url, {
+      buildKey: item.buildKey, app, platform: item.platform, env: item.env,
+    });
+    return rsp?.itmsUrl || '';
+  }
+
+  /** Delete R2 builds (server allows web-origin requests without api key). */
+  async r2DeleteBuilds(items: any[], app: string, env: string, platform: string): Promise<any> {
+    const url = this.getHost() + "/r2/delete-builds";
+    return this.postPromise(url, {
+      buildKeys: items.map(i => i.buildKey), app, env, platform,
+    });
+  }
+
+  /** Update description of an R2 build. */
+  async r2UpdateBuild(item: any, app: string, description: string): Promise<any> {
+    const url = this.getHost() + "/r2/update-build";
+    return this.postPromise(url, {
+      buildKey: item.buildKey, app, platform: item.platform, env: item.env, description,
+    });
+  }
+
+  /** Delete mixed (pgyer + R2) builds, then return the refreshed merged list. */
+  async deleteMixedVersions(app, env, platform, items: any[]): Promise<any> {
+    const pgyerKeys = items.filter(i => !i?.isR2).map(i => i.buildKey);
+    const tasks: Promise<any>[] = [];
+    const r2Items = items.filter(i => i?.isR2);
+    if (r2Items.length > 0) tasks.push(this.r2DeleteBuilds(r2Items, app, env, platform));
+    if (pgyerKeys.length > 0) tasks.push(this.deleteVersionReal(app, env, platform, pgyerKeys));
+    // allSettled: one side failing must not hide the other side's result.
+    const results = await Promise.allSettled(tasks);
+    const errors: string[] = [];
+    results.forEach(r => {
+      if (r.status === 'rejected') {
+        const reason: any = (r as PromiseRejectedResult).reason;
+        errors.push(String(reason?.message || reason?.error || reason));
+      }
+    });
+    if (errors.length > 0) {
+      throw new Error(`Some deletions failed: ${errors.join('; ')}`);
+    }
+    return this.getVersionsReal(app, env, platform);
   }
 
 }

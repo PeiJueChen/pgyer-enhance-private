@@ -30,12 +30,20 @@ export class AppUpdateTextComponent implements OnInit {
     const c = confirm('Are you sure to save the update description?');
     if (!c) return;
     try {
-      const rsp = await this.dataService.updateAppInfoReal(this.appDataService.app, this.appDataService.env, this.appDataService.platform, this.item.buildKey, this.updateDescription);
+      if (this.item?.isR2) {
+        const rsp = await this.dataService.r2UpdateBuild(this.item, this.appDataService.app, this.updateDescription);
+        if (!rsp?.data?.buildUpdateDescription) {
+          alert('Failed to save the update description.');
+          return;
+        }
+      } else {
+        const rsp = await this.dataService.updateAppInfoReal(this.appDataService.app, this.appDataService.env, this.appDataService.platform, this.item.buildKey, this.updateDescription);
 
-      const content = rsp?.data?.data?.buildUpdateDescription;
-      if (!content) {
-        alert('Failed to save the update description.');
-        return;
+        const content = rsp?.data?.data?.buildUpdateDescription;
+        if (!content) {
+          alert('Failed to save the update description.');
+          return;
+        }
       }
       this.item.buildUpdateDescription = this.updateDescription;
       this.isEditing = false;

@@ -12,6 +12,7 @@ const express = require('express');
 const cors = require('cors');
 
 const { getDeviceConfig, getAllVersions, deleteVersion, updateAppInfo, getIosInternalDownloadUrl } = require('./http');
+const r2Router = require('./r2');
 
 const app = express();
 
@@ -40,6 +41,18 @@ function returnError(res, message) {
 
 
 app.use('/', async (req, res, next) => {
+
+  // ALL /r2 endpoints skip the legacy Referer check and use their own unified
+  // guard in r2.js: dev (NODE_ENV=development) OR x-api-key OR web-origin.
+  const r2ApiKeyPaths = [
+    '/r2/upload-url', '/r2/commit-build', '/r2/update-build', '/r2/delete-builds',
+    '/r2/next-version', '/r2/versions', '/r2/download-url', '/r2/install-plist',
+    '/r2/merged-versions', '/r2/apps', '/r2/health',
+  ];
+  if (r2ApiKeyPaths.includes(req.path)) {
+    next();
+    return;
+  }
 
   if (!isPrd) {
     next();
@@ -103,14 +116,16 @@ const getCurrentApiKey = async (platform, env, app) => {
   }
 
   if (!_deviceData) {
-    return "";
+    returnError(res, 'device data not found');
+    return;
   }
 
   var apiKey = _deviceData?.defaultPgyerApiKey;
   const projects = _deviceData?.projects || [];
   const appObj = projects.find(p => p.name === app);
   if (!appObj) {
-    return "";
+    returnError(res, 'app not found');
+    return;
   }
   const currentAppInfo = appObj?.['pgyer']?.[platform]?.[env];
   apiKey = currentAppInfo?.apiKey || apiKey;
@@ -120,6 +135,7 @@ const getCurrentApiKey = async (platform, env, app) => {
 const handleVersion = async (res, platform, env, app) => {
   if (!platform || !env || !app) {
     returnError(res, 'missing parameters');
+    return;
   }
 
   if (!_deviceData) {
@@ -234,6 +250,10 @@ app.post('/updateAppInfo', async (req, res) => {
 
 });
 
+
+
+// Cloudflare R2 endpoints: presigned upload/download, build metadata, iOS OTA plist.
+app.use('/r2', r2Router);
 
 
 exports.appdownload = functions.https.onRequest(app);

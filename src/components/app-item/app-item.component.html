@@ -16,7 +16,7 @@
       <img [src]="item?.realIcon || 'https://www.pgyer.com/image/view/app_icons/'+item.buildIcon"class="item-icon" />
 
       <div class="item-info">
-        <h6 class="item-name">{{ item.buildName }}</h6>
+        <h6 class="item-name">{{ item.buildName }} <span class="r2-badge" *ngIf="item?.isR2">R2</span></h6>
         <p class="item-version">Version: {{ item.buildVersion }} (Build:{{ item.buildVersionNo }})   {{item.buildCreated | dateFormat}}</p>
       </div>
     </div>

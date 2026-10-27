@@ -17,6 +17,7 @@ export class AppComponent {
   href;
   qrcodeUrl;
   appIcon = '/assets/images/ai.png';
+  versionsLoaded = false;
   appName = "loading...";
   version = environment.version;
   constructor(private dataService: DataService, public appDataService: AppDataService, public p: Platform) {
@@ -113,6 +114,7 @@ export class AppComponent {
           })
         }
         this.appDataService.setVersions(realVerions);
+        this.versionsLoaded = true;
         if (!this.appDataService.realVerions || this.appDataService.realVerions.length === 0) {
           const obj = this.appDataService.getLocal(this.appDataService.appKey);
           if (obj?.href == window.location.href) {
@@ -184,13 +186,36 @@ export class AppComponent {
       this.appDataService.app = this.getValue('app');
       const app = projects.find(p => p.name === this.appDataService.app);
       if (!app) {
-        this.dataService.showAlert("Error", "app not found");
+        // Pure-R2 project (no pgyer/appcenter config yet): do NOT block here.
+        // Continue with empty currentAppInfo; /r2/merged-versions degrades
+        // gracefully (pgyer side returns [], R2 side serves the list).
+        this.appDataService.currentAppInfo = null;
+        this.appDataService.pgyerOriginalLink = '';
+        this.showPasswordForm = false;
+        this.getVersions();
         return;
       }
-      this.appDataService.currentAppInfo = app?.['pgyer']?.[this.appDataService.platform]?.[this.appDataService.env];
-      this.appDataService.pgyerOriginalLink = !!this.appDataService.currentAppInfo?.channel ? `https://www.pgyer.com/${this.appDataService.currentAppInfo?.channel}` : '';
-      this.appDataService.apiKey = this.appDataService.currentAppInfo?.apiKey || this.appDataService.apiKey;
-      this.showPasswordForm = !!this.appDataService?.currentAppInfo?.buildPassword;
+      // Display config (buildPassword / channel): r2 section wins, pgyer falls back,
+      // so password gating keeps working during and after the migration.
+      const r2Section = app?.['r2'] || {};
+      const r2Info = r2Section?.[this.appDataService.platform]?.[this.appDataService.env] || {};
+      const pgyerInfo = app?.['pgyer']?.[this.appDataService.platform]?.[this.appDataService.env] || {};
+      const merged: any = { ...pgyerInfo, ...r2Info };
+
+      // R2 buildPassword rules (only when the project has an r2 section):
+      //   env-level explicit value  >  r2 app-level value  >  default '0123'
+      //   '' (explicit empty string) means NO password required.
+      const hasR2 = Object.keys(r2Section).length > 0;
+      if (hasR2) {
+        if (r2Info.buildPassword !== undefined) merged.buildPassword = r2Info.buildPassword;
+        else if (r2Section.buildPassword !== undefined) merged.buildPassword = r2Section.buildPassword;
+        else merged.buildPassword = '0123';
+      }
+
+      this.appDataService.currentAppInfo = merged;
+      this.appDataService.pgyerOriginalLink = !!merged?.channel ? `https://www.pgyer.com/${merged?.channel}` : '';
+      this.appDataService.apiKey = merged?.apiKey || this.appDataService.apiKey;
+      this.showPasswordForm = !!merged?.buildPassword;
       this.getVersions();
       return;
     }
@@ -237,7 +262,7 @@ export class AppComponent {
   }
   _clickedLogo() {
     let userResponse = prompt("verify your identity to excecute this action");
-    if (userResponse && userResponse != 'jason') {
+    if (!userResponse || userResponse != 'jason') {
       alert("Please enter the correct password to execute this action");
       return;
     }

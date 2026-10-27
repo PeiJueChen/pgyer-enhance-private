@@ -43,4 +43,6 @@ Thumbs.db
 
 .firebase/
 firebase-debug.log
+ui-debug.log
 **jj-cli
+**gen-jj-project

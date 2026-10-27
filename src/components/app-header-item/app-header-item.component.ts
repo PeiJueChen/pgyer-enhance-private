@@ -42,7 +42,35 @@ export class AppHeaderItemComponent implements OnInit {
   }
 
 
-  installApp() {
+  async installApp() {
+    // R2 builds: fetch a signed url first (Android) or itms-services link (iOS).
+    if (this.item?.isR2) {
+      try {
+        this.item.isDownloading = true;
+        if (this.appDataService.platform === 'ios') {
+          const itmsUrl = await this.dataService.r2InstallPlist(this.item, this.appDataService.app);
+          if (!itmsUrl) {
+            this.dataService.showAlert('', 'the url is incorrect');
+            this.item.isDownloading = false;
+            return;
+          }
+          window.location.href = itmsUrl;
+        } else {
+          const url = await this.dataService.r2DownloadUrl(this.item.key);
+          if (!url) {
+            this.dataService.showAlert('', 'the url is incorrect');
+            this.item.isDownloading = false;
+            return;
+          }
+          window.open(url, '_blank');
+        }
+        setTimeout(() => { this.item.isDownloading = false; }, 6000);
+      } catch (error: any) {
+        this.item.isDownloading = false;
+        this.dataService.showAlert('Error', error?.message);
+      }
+      return;
+    }
     const url = this.appDataService.getDownloadUrl(this.item);
     if (!url) {
       this.dataService.showAlert('', 'the url is incorrect')
@@ -58,6 +86,11 @@ export class AppHeaderItemComponent implements OnInit {
   }
 
   retryDownload() {
+    // R2 builds retry the install flow; pgyer builds open the pgyer page.
+    if (this.item?.isR2) {
+      this.installApp();
+      return;
+    }
     window.open(this.appDataService.pgyerOriginalLink, '_blank');
   }
 
@@ -79,11 +112,12 @@ export class AppHeaderItemComponent implements OnInit {
       let userResponse = prompt("Are you sure to delete this version?");
       console.log('userResponse', userResponse);
 
-      if (userResponse && userResponse != 'jason') {
+      if (!userResponse || userResponse != 'jason') {
         alert("Please enter the correct password to delete this version");
         return;
       }
-      const rsp = await this.dataService.deleteVersionReal(this.appDataService.app, this.appDataService.env, this.appDataService.platform, [this.item.buildKey]);
+      const rsp = await this.dataService.deleteMixedVersions(
+        this.appDataService.app, this.appDataService.env, this.appDataService.platform, [this.item]);
       this.appDataService.handleVersions(rsp);
       this.subscribeService.next('versionsChanged', this.appDataService.realVerions);
       if (!this.appDataService.realVerions || this.appDataService.realVerions.length === 0) {
@@ -99,8 +133,14 @@ export class AppHeaderItemComponent implements OnInit {
   async downloadIpa(item) {
     try {
       if (!item?.buildKey) return;
-      const r: any = await this.dataService.getIosInternalDownloadUrl(item.buildKey);
-      const url = r?.result?.url;
+      let url = '';
+      if (item.isR2) {
+        // R2 build: sign the ipa object directly.
+        url = await this.dataService.r2DownloadUrl(item.key);
+      } else {
+        const r: any = await this.dataService.getIosInternalDownloadUrl(item.buildKey);
+        url = r?.result?.url;
+      }
       if (!url) return;
       const a = document.createElement('a');
       a.href = url;

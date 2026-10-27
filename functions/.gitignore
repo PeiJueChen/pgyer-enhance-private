@@ -1,2 +1,7 @@
 node_modules/
 *-debug.log
+
+# Firebase functions env files (contain R2 credentials, never commit them)
+.env
+.env.*
+!.env.example

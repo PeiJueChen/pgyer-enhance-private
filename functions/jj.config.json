@@ -1,0 +1,2036 @@
+{
+    "projects": [
+        {
+            "name": "eatizen",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "Eatizen_prd",
+                        "userName": "jing.guo.liang",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "Eatizen",
+                        "userName": "jing.guo.liang",
+                        "group": "uat_test"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "eatizen-prd",
+                        "userName": "peijue.chen",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "eatizen-uat",
+                        "userName": "peijue.chen",
+                        "group": "tester"
+                    }
+                }
+            }
+        },
+        {
+            "name": "genki",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "genki_prd-1",
+                        "userName": "peijue.chen",
+                        "group": "prd"
+                    },
+                    "dev": {
+                        "appName": "genki_dev",
+                        "userName": "jing.guo.liang",
+                        "group": "test"
+                    },
+                    "uat": {
+                        "appName": "genki_uat",
+                        "userName": "peijue.chen",
+                        "group": "test"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "genki_prd_forUser",
+                        "userName": "peijue.chen",
+                        "group": "All-users-of-genki_prd_forUser"
+                    },
+                    "dev": {
+                        "appName": "genki-dev",
+                        "userName": "peijue.chen",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "genki_uat_forUser",
+                        "userName": "peijue.chen",
+                        "group": "All-users-of-genki_uat_forUser"
+                    }
+                }
+            }
+        },
+        {
+            "name": "hkt",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "hkt_prd",
+                        "userName": "jing.guo.liang",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "HKT_uat",
+                        "userName": "jing.guo.liang",
+                        "group": "uat_test"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "Park-Aura-ios-prd",
+                        "userName": "peijue.chen",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "Park-Aura-ios-uat",
+                        "userName": "peijue.chen",
+                        "group": "tester"
+                    }
+                }
+            }
+        },
+        {
+            "name": "ichiran",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "Ichiran_prd",
+                        "userName": "jing.guo.liang",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "Ichiran_uat",
+                        "userName": "jing.guo.liang",
+                        "group": "uat"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "ichiran_prd",
+                        "userName": "peijue.chen",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "ichiran-uat",
+                        "userName": "peijue.chen",
+                        "group": "tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "ca8c8c828b3f275507849603a2208dcf",
+                        "channel": "a-ichiran-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "ca8c8c828b3f275507849603a2208dcf",
+                        "channel": "a-ichiran-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "351bf79bc3a14ab4d55f0e54f187a296",
+                        "channel": "a-ichiran-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "351bf79bc3a14ab4d55f0e54f187a296",
+                        "channel": "a-ichiran-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "ippudo",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "Ippudo_prd-1",
+                        "userName": "jing.guo.liang",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "Ippudo_uat-1",
+                        "userName": "jing.guo.liang",
+                        "group": "test"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "ippudo-prd",
+                        "userName": "peijue.chen",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "Ippudo-uat",
+                        "userName": "peijue.chen",
+                        "group": "tester"
+                    }
+                }
+            }
+        },
+        {
+            "name": "mang-inasal",
+            "appcenter": {
+                "android": {
+                    "v4uat": {
+                        "appName": "Mang-Inasal-Philippines-Android-Uat",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    },
+                    "v4prd": {
+                        "appName": "Mang-Inasal-Philippines-Android-PRD",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    }
+                },
+                "ios": {
+                    "v4uat": {
+                        "appName": "Mang-Inasal-Philippines-IOS-UAT",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    },
+                    "v4prd": {
+                        "appName": "Mang-Inasal-Philippines-IOS-PRD",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "1a419e04b888d1c2a6906f7c45babab8",
+                        "channel": "a-mi-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "1a419e04b888d1c2a6906f7c45babab8",
+                        "channel": "a-mi-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "78e9a871be8cbfce9b0786c324133579",
+                        "channel": "a-mi-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "78e9a871be8cbfce9b0786c324133579",
+                        "channel": "a-mi-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "merchant",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "merchant-app-Google-Play-Store",
+                        "userName": "ming.lin.huang",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "Order.Place-merchant-UAT",
+                        "userName": "ming.lin.huang",
+                        "group": "test"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "marchantApp_cloudKitchen",
+                        "userName": "jason.chen",
+                        "group": "all-users-of-order.place_merchant_prd"
+                    },
+                    "uat": {
+                        "appName": "Marchant-Uat",
+                        "userName": "peijue.chen",
+                        "group": "tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "6b16077fc9e57082feb21a067575fc09",
+                        "channel": "a-ma-android-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "6b16077fc9e57082feb21a067575fc09",
+                        "channel": "a-ma-android-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "f10fc35f8027b9674d3979977a9972d0",
+                        "channel": "a-ma-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "f10fc35f8027b9674d3979977a9972d0",
+                        "channel": "a-ma-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "merchant-pos",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "merchant-pos-android-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "merchant-pos-android-uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "merchant-pos-ios-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "merchant-pos-ios-uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                }
+            }
+        },
+        {
+            "name": "mos-hk",
+            "appcenter": {
+                "android": {
+                    "v4uat": {
+                        "appName": "MOS_UAT_ANDROID",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    },
+                    "v4prd": {
+                        "appName": "MOS_PRD_Android",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    }
+                },
+                "ios": {
+                    "v4uat": {
+                        "appName": "MOS_UAT",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    },
+                    "v4prd": {
+                        "appName": "MOS_PRD",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "d1d6e3a04232edc3bd3ff9e06c4b1b6c",
+                        "channel": "a-mhk-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "d1d6e3a04232edc3bd3ff9e06c4b1b6c",
+                        "channel": "a-mhk-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "5afb32addb21c22e66daa7728b2f3dc7",
+                        "channel": "a-mhk-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "5afb32addb21c22e66daa7728b2f3dc7",
+                        "channel": "a-mhk-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "mos-sg",
+            "appcenter": {
+                "android": {
+                    "v4uat": {
+                        "appName": "MOS_SG_Android_UAT",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    },
+                    "v4prd": {
+                        "appName": "MOS_SG_Android_Prd",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    }
+                },
+                "ios": {
+                    "v4uat": {
+                        "appName": "MOS_SG_iOS_UAT",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    },
+                    "v4prd": {
+                        "appName": "MOS_SG_iOS_Prd",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "oldprd": {
+                        "appKey": "fac0bd99902222a30cbd323f947e0754",
+                        "channel": "a-msg-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "oldprd2": {
+                        "appKey": "3b747c19a3c27c86ad2f6e1b5e44a0d5",
+                        "channel": "a-msg-and-prd2",
+                        "buildPassword": "0123"
+                    },
+                    "prd": {
+                        "appKey": "b4e613a9c5104dfec39eb748e3900a39",
+                        "channel": "a-msg-and-prd3",
+                        "buildPassword": "0123"
+                    },
+                    "olduat": {
+                        "appKey": "fac0bd99902222a30cbd323f947e0754",
+                        "channel": "a-msg-and-uat",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "b4e613a9c5104dfec39eb748e3900a39",
+                        "channel": "a-msg-and-uat3",
+                        "buildPassword": "0123"
+                    },
+                    "olduat2": {
+                        "appKey": "3b747c19a3c27c86ad2f6e1b5e44a0d5",
+                        "channel": "a-msg-and-uat2",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "15c3256e7d92d67ec870c4678a806899",
+                        "channel": "a-msg-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "15c3256e7d92d67ec870c4678a806899",
+                        "channel": "a-msg-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "oss-app-hk",
+            "appcenter": {
+                "android": {
+                    "v4uat": {
+                        "appName": "oss_uat",
+                        "userName": "jing.guo.liang",
+                        "group": "v4tester"
+                    },
+                    "v4prd": {
+                        "appName": "oss_prd",
+                        "userName": "jing.guo.liang",
+                        "group": "v4tester"
+                    }
+                },
+                "ios": {
+                    "v4uat": {
+                        "appName": "oss_uat",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    },
+                    "v4prd": {
+                        "appName": "oss-prd",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "47faf405e11a6058dd7aabeb4bb53252",
+                        "channel": "a-oss-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "47faf405e11a6058dd7aabeb4bb53252",
+                        "channel": "a-oss-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "8efddfd0fef8258621febc1689ea728f",
+                        "channel": "a-oss-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "8efddfd0fef8258621febc1689ea728f",
+                        "channel": "a-oss-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "red-ribbon",
+            "appcenter": {
+                "android": {
+                    "v4uat": {
+                        "appName": "Red-Ribbon-Android-Uat",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    },
+                    "v4prd": {
+                        "appName": "Red-Ribbon-Philippines-Android-PRD",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    }
+                },
+                "ios": {
+                    "v4uat": {
+                        "appName": "Red-Ribbon-Philippines-iOS-UAT",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    },
+                    "v4prd": {
+                        "appName": "Red-Ribbon-Philippines-iOS-PRD",
+                        "userName": "hans-nnmn",
+                        "group": "v4tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "e8cceb24ca4c86e62bed1e6a01d7c7f0",
+                        "channel": "a-rr-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "e8cceb24ca4c86e62bed1e6a01d7c7f0",
+                        "channel": "a-rr-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "b9acb0ba231b44c3b4faf8ceb3b3c0de",
+                        "channel": "a-rr-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "b9acb0ba231b44c3b4faf8ceb3b3c0de",
+                        "channel": "a-rr-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "senryo",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "senryo_prd-1",
+                        "userName": "peijue.chen",
+                        "group": "prd"
+                    },
+                    "dev": {
+                        "appName": "senryo_dev",
+                        "userName": "jing.guo.liang",
+                        "group": "test"
+                    },
+                    "uat": {
+                        "appName": "senryo_uat-1",
+                        "userName": "peijue.chen",
+                        "group": "test"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "senry_prd_forUser",
+                        "userName": "peijue.chen",
+                        "group": "All-users-of-senry_prd_forUser"
+                    },
+                    "dev": {
+                        "appName": "senryo_dev",
+                        "userName": "peijue.chen",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "senry_uat_forUser",
+                        "userName": "peijue.chen",
+                        "group": "All-users-of-senry_uat_forUser"
+                    }
+                }
+            }
+        },
+        {
+            "name": "tamjai",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "tamjai",
+                        "userName": "jing.guo.liang",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "tamjai_uat",
+                        "userName": "jing.guo.liang",
+                        "group": "test"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "tamjai-prd",
+                        "userName": "peijue.chen",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "tamjai_uat",
+                        "userName": "peijue.chen",
+                        "group": "All-users-of-tamjai_uat"
+                    }
+                }
+            }
+        },
+        {
+            "name": "texas-chicken",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "texas",
+                        "userName": "jing.guo.liang",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "texcas_uat_android",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "texas_chicken_prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "texas_chicken_uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "2847ed69a5e497325f47d526903a9941",
+                        "channel": "a-texas-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "2847ed69a5e497325f47d526903a9941",
+                        "channel": "a-texas-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "c6c8848bf22e587535a296b8c4bb641b",
+                        "channel": "a-texas-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "c6c8848bf22e587535a296b8c4bb641b",
+                        "channel": "a-texas-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "timhorton",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "tim_hortons_prd_android",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "tim_hortons_uat_android",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "tim_hortons_prd_ios",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "tim_hortons_uat_ios",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "452ffee8290552d8324f32d158d4b34e",
+                        "channel": "a-th-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "452ffee8290552d8324f32d158d4b34e",
+                        "channel": "a-th-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "eabc8bc3dea808b48bff1d4d5b7ae17c",
+                        "channel": "a-th-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "eabc8bc3dea808b48bff1d4d5b7ae17c",
+                        "channel": "a-th-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "yoshinoya",
+            "appcenter": {
+                "android": {
+                    "v4uat": {
+                        "appName": "yoshinoya_uat_android",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "v4prd": {
+                        "appName": "yoshinoya_prd_android",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                },
+                "ios": {
+                    "v4uat": {
+                        "appName": "yoshinoya_uat_ios",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "v4prd": {
+                        "appName": "yoshinoya_prd_ios",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                }
+            }
+        },
+        {
+            "pgyer": {
+                "apiKey": "0202f5206763d902070f95c7826cb794",
+                "android": {
+                    "description": "prd",
+                    "appKey": "0c4aac487fa2d1592698e943f0ceaa73"
+                },
+                "buildPassword": "1234",
+                "ios": {
+                    "description": "prd",
+                    "appKey": "29000c9f74c21d25fd2b9c1199bea609"
+                },
+                "userKey": "471d6e62cbf774ff03cc7cd8749b93cf"
+            },
+            "name": "patpet"
+        },
+        {
+            "name": "universal-app",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "universal-android-app-aigens",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "android_test_universal_app",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "universal-ios-app-aigens",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "ios_test_universal_app",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "d3dc4c4d525becb46bf042554c6b396a",
+                        "channel": "a-universal-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "d3dc4c4d525becb46bf042554c6b396a",
+                        "channel": "a-universal-and-uat",
+                        "buildPassword": "0123"
+                    },
+                    "uat-low": {
+                        "appKey": "d3dc4c4d525becb46bf042554c6b396a",
+                        "channel": "a-un-and-uat-low",
+                        "buildPassword": "0123"
+                    },
+                    "prd-low": {
+                        "appKey": "d3dc4c4d525becb46bf042554c6b396a",
+                        "channel": "a-un-and-prd-low",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "f5b159db7e7b4064ebdcf42ad942a217",
+                        "channel": "a-universal-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "f5b159db7e7b4064ebdcf42ad942a217",
+                        "channel": "a-universal-ios-uat",
+                        "buildPassword": "0123"
+                    },
+                    "uat-low": {
+                        "appKey": "f5b159db7e7b4064ebdcf42ad942a217",
+                        "channel": "a-un-ios-uat-low",
+                        "buildPassword": "0123"
+                    },
+                    "prd-low": {
+                        "appKey": "f5b159db7e7b4064ebdcf42ad942a217",
+                        "channel": "a-un-ios-prd-low",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "jbsg",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "Jollibee-Android-PRD",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "Jollibee-Android-Uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "Jollibee-iOS-PRD",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "Jollibee-iOS-UAT",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "9401d5132eca6da7417c18cc7e44a2f4",
+                        "channel": "a-jbsg-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "9401d5132eca6da7417c18cc7e44a2f4",
+                        "channel": "a-jbsg-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "b5e1324ef12b28947cbcc8a7b994fb98",
+                        "channel": "a-jbsg-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "b5e1324ef12b28947cbcc8a7b994fb98",
+                        "channel": "a-jbsg-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "namkeehk",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "namkeehk_android_prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "namkeehk_android_uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "namkeehk_ios_prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "namkeehk_ios_uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "7bedbf7cd55af79f9d1f188e01f4aa39",
+                        "channel": "a-namkee-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "7bedbf7cd55af79f9d1f188e01f4aa39",
+                        "channel": "a-namkee-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "1f0db581f97f64180dc35e85adfd48c9",
+                        "channel": "a-namkee-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "1f0db581f97f64180dc35e85adfd48c9",
+                        "channel": "a-namkee-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "aigens-cafe",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "aigenscafe-android-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "aigenscafe-android-uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "aigenscafe-ios-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "aigenscafe-ios-uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "uat": {
+                        "appKey": "5d444463bfb6f2f4169206fd9cc1789b",
+                        "channel": "a-cafe-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "uat": {
+                        "appKey": "61414109aa8a6cc82371dd9552015811",
+                        "channel": "a-cafe-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "pizza-hut-hk",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "pizzahut-prd-android",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "pizzahut-uat-android",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "phase2uat": {
+                        "appName": "pizzahut-uat-android",
+                        "userName": "hans-nnmn",
+                        "group": "phase2"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "pizzahut-prd-ios",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "pizzahut-uat-ios",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "phase2uat": {
+                        "appName": "pizzahut-uat-ios",
+                        "userName": "hans-nnmn",
+                        "group": "phase2"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "777722a866c9656e7aaa2f45274d6b4a",
+                        "channel": "a-phhk-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "p-firebase": {
+                        "appKey": "777722a866c9656e7aaa2f45274d6b4a",
+                        "channel": "a-phhk-and-pfire",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "ad9564db72148f294221ae098b3db8f2",
+                        "channel": "a-phhk-and-uat",
+                        "buildPassword": "0123"
+                    },
+                    "u-firebase": {
+                        "appKey": "ad9564db72148f294221ae098b3db8f2",
+                        "channel": "a-phhk-and-ufire",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "3a84a85c7bd006d9e551813b70cbbc1a",
+                        "channel": "a-phhk-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "p-firebase": {
+                        "appKey": "3a84a85c7bd006d9e551813b70cbbc1a",
+                        "channel": "a-phhk-ios-pfire",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "c1a6637d4f699e1a68562395901a0017",
+                        "channel": "a-phhk-ios-uat",
+                        "buildPassword": "0123"
+                    },
+                    "u-firebase": {
+                        "appKey": "c1a6637d4f699e1a68562395901a0017",
+                        "channel": "a-phhk-ios-ufire",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "sensory-zero-hk",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "sensoryzerohk-android-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "sensoryzerohk-android-uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "sensoryzerohk-ios-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "sensoryzerohk-ios-uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "6bfb3ce0ec5a69c1f0f05f03018dac99",
+                        "channel": "a-szh-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "6bfb3ce0ec5a69c1f0f05f03018dac99",
+                        "channel": "a-szh-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "edb5a722411043038e797d21e58a0e35",
+                        "channel": "a-szh-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "edb5a722411043038e797d21e58a0e35",
+                        "channel": "a-szh-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "v4test",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "v4-test-android-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "v4-test-android",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "v4-test-ios-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "v4-test-ios",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                }
+            }
+        },
+        {
+            "name": "hitoyoshi",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "hitoyoshi-android-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "hitoyoshi-android-uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "hitoyoshi-ios-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "hitoyoshi-ios-uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "cedfac9ec9c281b849d7f22dd2d20f27",
+                        "channel": "a-hys-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "cedfac9ec9c281b849d7f22dd2d20f27",
+                        "channel": "a-hys-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "90d497fae33e558a5c4f83aa433b6521",
+                        "channel": "a-hys-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "90d497fae33e558a5c4f83aa433b6521",
+                        "channel": "a-hys-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "nandos-my",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "nandos-android-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "nandos-android-uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "nandos-ios-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "nandos-ios-uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "fd5ac301265510f278a50137682735bd",
+                        "channel": "a-nmy-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "fd5ac301265510f278a50137682735bd",
+                        "channel": "a-nmy-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "6c073344c034b3a99de1558b266bf112",
+                        "channel": "a-nmy-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "6c073344c034b3a99de1558b266bf112",
+                        "channel": "a-nmy-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "nandos-sg",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "nandos-sg-android-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "nandos-sg-android-uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "nandos-sg-ios-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "nandos-sg-ios-uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "ac9494cc4d4296044ceb1eec1777dadf",
+                        "channel": "a-nsg-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "ac9494cc4d4296044ceb1eec1777dadf",
+                        "channel": "a-nsg-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "01a4de876c1b600ae78871fb73c1b8c0",
+                        "channel": "a-nsg-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "01a4de876c1b600ae78871fb73c1b8c0",
+                        "channel": "a-nsg-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "k-fry-hk",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "kfry-android-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "kfry-android-uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "kfry-ios-prd",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    },
+                    "uat": {
+                        "appName": "kfry-ios-uat",
+                        "userName": "hans-nnmn",
+                        "group": "tester"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "d578c3a7b2006826496da6a12db87d11",
+                        "channel": "a-kfry-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "d578c3a7b2006826496da6a12db87d11",
+                        "channel": "a-kfry-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "922bede6e546b658d355e7f83fcc71b8",
+                        "channel": "a-kfry-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "922bede6e546b658d355e7f83fcc71b8",
+                        "channel": "a-kfry-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "watami",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "watami-android",
+                        "userName": "hans-nnmn",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "watami-android",
+                        "userName": "hans-nnmn",
+                        "group": "uat"
+                    },
+                    "uatphase2": {
+                        "appName": "watami-android",
+                        "userName": "hans-nnmn",
+                        "group": "phase2"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "watami-ios",
+                        "userName": "hans-nnmn",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "watami-ios",
+                        "userName": "hans-nnmn",
+                        "group": "uat"
+                    },
+                    "uatphase2": {
+                        "appName": "watami-ios",
+                        "userName": "hans-nnmn",
+                        "group": "phase2"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "c7dfd98d0125da36d5543ee49403a146",
+                        "channel": "a-wtm-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "c7dfd98d0125da36d5543ee49403a146",
+                        "channel": "a-wtm-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "1b9a101cbd51e4ff19a1c43a5e3e286d",
+                        "channel": "a-wtm-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "1b9a101cbd51e4ff19a1c43a5e3e286d",
+                        "channel": "a-wtm-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "subway-sg",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "subway-sg-android",
+                        "userName": "hans-nnmn",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "subway-sg-android",
+                        "userName": "hans-nnmn",
+                        "group": "uat"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "subwaysg-ios",
+                        "userName": "hans-nnmn",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "subwaysg-ios",
+                        "userName": "hans-nnmn",
+                        "group": "uat"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "c814848c6331696ff8649d6d0f1a3d2d",
+                        "channel": "a-swsg-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "c814848c6331696ff8649d6d0f1a3d2d",
+                        "channel": "a-swsg-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "c086a1e0e3930fb946d58e2c3152f2a0",
+                        "channel": "a-swsg-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "c086a1e0e3930fb946d58e2c3152f2a0",
+                        "channel": "a-swsg-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "bkph",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "bkph-android",
+                        "userName": "hans-nnmn",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "bkph-android",
+                        "userName": "hans-nnmn",
+                        "group": "uat"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "bkph-ios",
+                        "userName": "hans-nnmn",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "bkph-ios",
+                        "userName": "hans-nnmn",
+                        "group": "uat"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "b973909e099f1a74d5567b516bbb155b",
+                        "channel": "a-bkph-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "b973909e099f1a74d5567b516bbb155b",
+                        "channel": "a-bkph-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "9a33b1aa4972fd09381f9435a49f6ab2",
+                        "channel": "a-bkph-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "9a33b1aa4972fd09381f9435a49f6ab2",
+                        "channel": "a-bkph-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "standard-app",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "aigens-standard-android",
+                        "userName": "hans-nnmn",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "aigens-standard-android",
+                        "userName": "hans-nnmn",
+                        "group": "uat"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "aigens-standard-ios",
+                        "userName": "hans-nnmn",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "aigens-standard-ios",
+                        "userName": "hans-nnmn",
+                        "group": "uat"
+                    }
+                }
+            }
+        },
+        {
+            "name": "feteup",
+            "appcenter": {
+                "android": {
+                    "prd": {
+                        "appName": "feteup-android",
+                        "userName": "hans-nnmn",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "feteup-android",
+                        "userName": "hans-nnmn",
+                        "group": "uat"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appName": "feteup-ios",
+                        "userName": "hans-nnmn",
+                        "group": "prd"
+                    },
+                    "uat": {
+                        "appName": "feteup-ios",
+                        "userName": "hans-nnmn",
+                        "group": "uat"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "408b443e23491f3fb81cfb8bd85c661b",
+                        "channel": "a-feteup-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "408b443e23491f3fb81cfb8bd85c661b",
+                        "channel": "a-feteup-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "8221f56e3843712461f6e59170014b85",
+                        "channel": "a-feteup-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "8221f56e3843712461f6e59170014b85",
+                        "channel": "a-feteup-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "aigens-loyalty",
+            "appcenter": {
+                "android": {
+                    "uat": {
+                        "appName": "aigens-loyalty-android",
+                        "userName": "hans-nnmn",
+                        "group": "loyalty"
+                    }
+                },
+                "ios": {
+                    "uat": {
+                        "appName": "aigens-ios-app",
+                        "userName": "hans-nnmn",
+                        "group": "loyalty"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "33dcf3484e8230aedc5fd95a16a8a6c9",
+                        "channel": "a-loyalty-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "33dcf3484e8230aedc5fd95a16a8a6c9",
+                        "channel": "a-loyalty-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "6c0a2fb92d8eb9d36e96802eccebfd37",
+                        "channel": "a-loyalty-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "6c0a2fb92d8eb9d36e96802eccebfd37",
+                        "channel": "a-loyalty-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "aigens-ordering",
+            "appcenter": {
+                "android": {
+                    "uat": {
+                        "appName": "aigens-loyalty-android",
+                        "userName": "hans-nnmn",
+                        "group": "ordering"
+                    }
+                },
+                "ios": {
+                    "uat": {
+                        "appName": "aigens-ios-app",
+                        "userName": "hans-nnmn",
+                        "group": "ordering"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "45f139539d55bdb6c306c7c94b26bfa7",
+                        "channel": "a-ordering-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "45f139539d55bdb6c306c7c94b26bfa7",
+                        "channel": "a-ordering-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "df7b774f9f0b57700fab383f67862f14",
+                        "channel": "a-ordering-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "df7b774f9f0b57700fab383f67862f14",
+                        "channel": "a-ordering-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "aigens-loyalty-ordering",
+            "appcenter": {
+                "android": {
+                    "uat": {
+                        "appName": "aigens-loyalty-android",
+                        "userName": "hans-nnmn",
+                        "group": "loyalty-ordering"
+                    }
+                },
+                "ios": {
+                    "uat": {
+                        "appName": "aigens-ios-app",
+                        "userName": "hans-nnmn",
+                        "group": "loyalty-ordering"
+                    }
+                }
+            },
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "1e43811ccf74cc1a7209dc6a9080d362",
+                        "channel": "a-loyalty-o-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "1e43811ccf74cc1a7209dc6a9080d362",
+                        "channel": "a-loyalty-o-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "b124afcd716ccfb3ae2a2d1528e506b3",
+                        "channel": "a-loyalty-o-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "b124afcd716ccfb3ae2a2d1528e506b3",
+                        "channel": "a-loyalty-o-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "bksg",
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "e31a5b20e0a24154c5e33227d601d150",
+                        "channel": "a-bksg-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "test": {
+                        "appKey": "e31a5b20e0a24154c5e33227d601d150",
+                        "channel": "a-bksg-and-beta",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "e31a5b20e0a24154c5e33227d601d150",
+                        "channel": "a-bksg-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "uat": {
+                        "appKey": "172361003f91d981be3c56b84801af3e",
+                        "channel": "a-bksg2-ios-uat",
+                        "buildPassword": "0123"
+                    },
+                    "test": {
+                        "appKey": "172361003f91d981be3c56b84801af3e",
+                        "channel": "a-bksg2-ios-beta",
+                        "buildPassword": "0123"
+                    },
+                    "prd": {
+                        "appKey": "172361003f91d981be3c56b84801af3e",
+                        "channel": "a-bksg2-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "oldtest": {
+                        "appKey": "8da489e31e9b91eaabe82ec92ecb3163",
+                        "channel": "a-bksg-ios-beta",
+                        "buildPassword": "0123"
+                    },
+                    "olduat": {
+                        "appKey": "8da489e31e9b91eaabe82ec92ecb3163",
+                        "channel": "a-bksg-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "sushi-zanmai",
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "a46cfed76996aa3fc1264920485dad83",
+                        "channel": "a-smai-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "a46cfed76996aa3fc1264920485dad83",
+                        "channel": "a-smai-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "0f94710704f7a67a5f9b5201a4e704b4",
+                        "channel": "a-smai-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "0f94710704f7a67a5f9b5201a4e704b4",
+                        "channel": "a-smai-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "shake-shack",
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "9e9458e44f09384e4b5494f9352c023a",
+                        "channel": "a-ss-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "9e9458e44f09384e4b5494f9352c023a",
+                        "channel": "a-ss-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "02445a917968668edbd341928e90ab7d",
+                        "channel": "a-ss-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "02445a917968668edbd341928e90ab7d",
+                        "channel": "a-ss-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "webview-android",
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "b27fa06c84f3ed73c0c7c568a03820f8",
+                        "channel": "web-aigens-kiosk",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "chick-sg",
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "a0cc1962dda7260c98a7f1607aaa8a7a",
+                        "channel": "a-ch-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "a0cc1962dda7260c98a7f1607aaa8a7a",
+                        "channel": "a-ch-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "5b3278f378d7c516d27c313b625c2d87",
+                        "channel": "a-ch-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "5b3278f378d7c516d27c313b625c2d87",
+                        "channel": "a-ch-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "fairwood",
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "7cb341544dc9636c4a9370c5ccc941ae",
+                        "channel": "a-fw-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "7cb341544dc9636c4a9370c5ccc941ae",
+                        "channel": "a-fw-and-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "ygf-malatang",
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "fa4afc3c4e8b9b4c2904d9f6210b503f",
+                        "channel": "a-ygf-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "fa4afc3c4e8b9b4c2904d9f6210b503f",
+                        "channel": "a-ygf-and-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "jj-sayang",
+            "pgyer": {
+                "android": {
+                    "prd": {
+                        "appKey": "888a56c15f11e122e772aba2b5fe65ac",
+                        "channel": "a-jj-and-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "888a56c15f11e122e772aba2b5fe65ac",
+                        "channel": "a-jj-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "prd": {
+                        "appKey": "f8aa1480a206b203f9ff43dd76d08cfd",
+                        "channel": "a-jj-ios-prd",
+                        "buildPassword": "0123"
+                    },
+                    "uat": {
+                        "appKey": "f8aa1480a206b203f9ff43dd76d08cfd",
+                        "channel": "a-jj-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        },
+        {
+            "name": "cosmo",
+            "r2": {
+                "envs": []
+            },
+            "pgyer": {
+                "android": {
+                    "uat": {
+                        "appKey": "b8947e2298f5d847783b6202aa7a7ee4",
+                        "channel": "a-cosmo-and-uat",
+                        "buildPassword": "0123"
+                    }
+                },
+                "ios": {
+                    "uat": {
+                        "appKey": "9c3e843d47fe2c984a7a97aa834c8199",
+                        "channel": "a-cosmo-ios-uat",
+                        "buildPassword": "0123"
+                    }
+                }
+            }
+        }
+    ],
+    "defaultPgyerApiKey": "0202f5206763d902070f95c7826cb794",
+    "defaultPgyerUserKey": "471d6e62cbf774ff03cc7cd8749b93cf",
+    "defaultAppcenterToken": "cc08d0408403c04968bcfbf738a7356bf6f4c8be"
+}

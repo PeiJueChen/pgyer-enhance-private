@@ -173,8 +173,10 @@ const post2 = async (url, body, headers) => {
   });
 }
 
-var allVersions = [];
-const _getAllVerions = async (apiKey, appKey, page) => {
+// Accumulate pages in a LOCAL array passed through the recursion.
+// (The previous module-level array leaked state across concurrent requests,
+// e.g. two merged-versions calls could mix each other's pages.)
+const _getAllVerions = async (apiKey, appKey, page, acc) => {
   const host = "https://www.pgyer.com";
   // https://www.pgyer.com/apiv2/app/builds?_api_key=0202f5206763d902070f95c7826cb794&appKey=f10fc35f8027b9674d3979977a9972d0&channelKey=88dc901e6112b228f0c62833706d7b06&page=1
   const url = host + "/apiv2/app/builds";
@@ -190,19 +192,17 @@ const _getAllVerions = async (apiKey, appKey, page) => {
   const pageCount = rsp?.data?.pageCount || 1;
   const currentPage = page;
 
-  allVersions.push(...list);
+  acc.push(...list);
   if (currentPage < pageCount) {
-    await _getAllVerions(apiKey, appKey, currentPage + 1);
+    await _getAllVerions(apiKey, appKey, currentPage + 1, acc);
   }
-  const result = [...allVersions]
-  return result;
+  return acc;
 }
 
 const getAllVersions = async (apiKey, appKey, page, env) => {
-  allVersions = [];
   var result = [];
   try {
-    result = await _getAllVerions(apiKey, appKey, page);
+    result = await _getAllVerions(apiKey, appKey, page, []);
   } catch (error) {
   }
   if (result.length == 0) {
@@ -232,7 +232,6 @@ const getAllVersions = async (apiKey, appKey, page, env) => {
     return (version?.buildUpdateDescription || UAT_ENV).includes(envStr) && !excludeEnvs.find(e => (version?.buildUpdateDescription || UAT_ENV).includes(e));
   })
 
-  allVersions = [];
   return result;
 
 }
@@ -279,8 +278,8 @@ const getIosInternalDownloadUrl = async (buildKey) => {
     const softwarePackageMatch = plistContent.match(
       /<string>software-package<\/string>\s*<key>url<\/key>\s*<string>([^<]+)<\/string>/
     );
-    console.log('plistContent:',softwarePackageMatch[1]);
     if (softwarePackageMatch && softwarePackageMatch[1]) {
+      console.log('plistContent:', softwarePackageMatch[1]);
       rsp['url'] = softwarePackageMatch[1];
     }
   } catch (error) {

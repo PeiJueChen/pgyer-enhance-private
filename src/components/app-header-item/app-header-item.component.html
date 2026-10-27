@@ -2,7 +2,7 @@
   <div class="icon">
     <img [src]="item?.realIcon || 'https://www.pgyer.com/image/view/app_icons/'+item.buildIcon" (error)="onImgError()" />
   </div>
-  <h3 (click)="deleteItem($event);$event.stopPropagation();" class="name">{{item.buildName}}</h3>
+  <h3 (click)="deleteItem($event);$event.stopPropagation();" class="name">{{item.buildName}} <span class="r2-badge" *ngIf="item?.isR2">R2</span></h3>
   <div class="device-name-container">
     <p class="device-name">
       <img src="assets/images/ios.svg" *ngIf="appDataService.platform == 'ios'" class="platform-icon" />
@@ -10,7 +10,7 @@
       {{ appDataService.platform == 'android' ? 'For Android device' : 'For iOS device'}}
     </p>
 
-    <div class="download-container" *ngIf="appDataService.pgyerOriginalLink" (click)="retryDownload()">
+    <div class="download-container" *ngIf="appDataService.pgyerOriginalLink && !item?.isR2" (click)="retryDownload()">
       <span>Download failed?</span>
       <span>try again</span>
     </div>
