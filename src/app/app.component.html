@@ -1,3 +1,6 @@
+<app-admin-console *ngIf="isAdminConsole"></app-admin-console>
+
+<ng-container *ngIf="!isAdminConsole">
 <div class="container" [ngClass]="{'has-pwd': showPasswordForm}">
   <img src="assets/images/aigens.png" class="header-logo" (click)="clickedLogo($event);$event.stopPropagation()"/>
 
@@ -37,3 +40,4 @@
   </div>
 
 </div>
+</ng-container>

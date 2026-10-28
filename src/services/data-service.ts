@@ -173,7 +173,7 @@ export class DataService {
   /** Signed download URL for an R2 build (use item.key from merged-versions). */
   async r2DownloadUrl(key: string): Promise<string> {
     const url = this.getHost() + "/r2/download-url";
-    const rsp: any = await this.getPromise(url, { key });
+    const rsp: any = await this.getPromise(url + `?t=${Date.now()}`, { key });
     return rsp?.url || '';
   }
 
@@ -181,7 +181,7 @@ export class DataService {
   /** item carries buildKey/platform/env from merged-versions; app avoids the server-side scan. */
   async r2InstallPlist(item: any, app: string): Promise<string> {
     const url = this.getHost() + "/r2/install-plist";
-    const rsp: any = await this.getPromise(url, {
+    const rsp: any = await this.getPromise(url + `?t=${Date.now()}`, {
       buildKey: item.buildKey, app, platform: item.platform, env: item.env,
     });
     return rsp?.itmsUrl || '';
@@ -201,6 +201,69 @@ export class DataService {
     return this.postPromise(url, {
       buildKey: item.buildKey, app, platform: item.platform, env: item.env, description,
     });
+  }
+
+  // ---- admin console ----
+
+  /** Management token issued by /r2/admin-login; attached to all console calls. */
+  adminToken = '';
+
+  private withAdmin(headers?: any): any {
+    return { ...(headers || {}), ...(this.adminToken ? { 'x-api-key': this.adminToken } : {}) };
+  }
+
+  /** Admin console login (backend checks R2_ADMIN_PASSWORD). */
+  async adminLogin(password: string): Promise<any> {
+    const url = this.getHost() + "/r2/admin-login";
+    const rsp: any = await this.postPromise(url, { password });
+    if (rsp?.token) this.adminToken = rsp.token;
+    return rsp;
+  }
+
+  /** Aggregated app roster (iconUrl / builds / envs / latest). */
+  async getAppsList(): Promise<any[]> {
+    const url = this.getHost() + "/r2/apps";
+    const rsp: any = await this.getPromise(url + `?t=${Date.now()}`, {}, this.withAdmin());
+    return rsp?.apps || [];
+  }
+
+  /** ALL versions of an app (no platform/env filter -> backend fan-out). */
+  async getAppVersions(appId: string): Promise<any[]> {
+    const url = this.getHost() + "/r2/versions";
+    const rsp: any = await this.getPromise(url + `?t=${Date.now()}`, { appId }, this.withAdmin());
+    return rsp?.versions || [];
+  }
+
+  /** Console delete by buildKeys only (backend scans to locate). */
+  async r2DeleteBuildsByKeys(buildKeys: string[]): Promise<any> {
+    const url = this.getHost() + "/r2/delete-builds";
+    return this.postPromise(url, { buildKeys }, this.withAdmin());
+  }
+
+  /** Console update with optional extra fields (appName/bundleId/buildNumber). */
+  async r2UpdateBuildFull(item: any, app: string, description: string, extra?: any): Promise<any> {
+    const url = this.getHost() + "/r2/update-build";
+    return this.postPromise(url, {
+      buildKey: item.buildKey, app, platform: item.platform, env: item.env, description, ...(extra || {}),
+    }, this.withAdmin());
+  }
+
+  /** Step 1 of manual upload: presigned PUT url + buildKey. */
+  async requestUploadUrl(params: any): Promise<any> {
+    const url = this.getHost() + "/r2/upload-url";
+    return this.postPromise(url, params, this.withAdmin());
+  }
+
+  /** Step 2 of manual upload: stream the file directly to R2. */
+  async putFileToUrl(uploadUrl: string, file: File, contentType: string): Promise<void> {
+    const rsp = await fetch(uploadUrl, { method: 'PUT', headers: { 'Content-Type': contentType }, body: file });
+    if (!rsp.ok) throw new Error(`R2 upload failed (${rsp.status})`);
+  }
+
+  /** Step 3 of manual upload: register the build in meta. */
+  async commitBuild(params: any): Promise<any> {
+    const url = this.getHost() + "/r2/commit-build";
+    return this.postPromise(url, params, this.withAdmin());
   }
 
   /** Delete mixed (pgyer + R2) builds, then return the refreshed merged list. */

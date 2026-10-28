@@ -47,7 +47,7 @@ app.use('/', async (req, res, next) => {
   const r2ApiKeyPaths = [
     '/r2/upload-url', '/r2/commit-build', '/r2/update-build', '/r2/delete-builds',
     '/r2/next-version', '/r2/versions', '/r2/download-url', '/r2/install-plist',
-    '/r2/merged-versions', '/r2/apps', '/r2/health',
+    '/r2/merged-versions', '/r2/apps', '/r2/admin-login', '/r2/health',
   ];
   if (r2ApiKeyPaths.includes(req.path)) {
     next();

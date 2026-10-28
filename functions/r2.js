@@ -63,6 +63,28 @@ function getS3() {
   return s3Client;
 }
 
+// ---- Cliq notification (R2_CLIQ_WEBHOOK, best-effort) ----
+// Covers EVERY upload path (jj-cli, console, direct API). Awaited because gen1
+// freezes the process once the response is sent.
+const R2_CLIQ_WEBHOOK = process.env.R2_CLIQ_WEBHOOK || '';
+
+async function notifyCliq(text) {
+  if (!R2_CLIQ_WEBHOOK) return;
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
+    const rsp = await fetch(R2_CLIQ_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+    console.log('cliq notify:', rsp.status);
+  } catch (error) { console.warn('cliq notify failed:', error?.message); }
+}
+
+const fmtMB = (bytes) => ((Number(bytes) || 0) / 1024 / 1024).toFixed(1) + ' MB';
 // ---- meta storage (R2 based) ----
 const metaKeyOf = (appId, platform, env, buildKey) => `apps/${appId}/${platform}/${envDir(env)}/${buildKey}/${META_FILE}`;
 
@@ -212,26 +234,39 @@ async function listBuildDirs(appId, platform) {
   return out;
 }
 
-/** Load all builds of an app/platform(+env): ONE meta.json GET per env. */
+// Short-lived RESULT cache for loadBuilds (60s). Local writes invalidate
+// immediately; cross-instance staleness (prod upload / local read) is
+// bounded by the TTL. Callers get a COPY — they sort in place.
+const BUILDS_CACHE_TTL = 60 * 1000;
+const _buildsCache = new Map();
+function invalidateBuildsCache() { _buildsCache.clear(); }
+
+/** Load all builds of an app/platform(+env): real-time dir enumeration,
+ *  ONE meta.json GET per env (no cross-instance stale cache involved). */
 async function loadBuilds(appId, platform, env) {
   const e = normEnv(env);
-  const collect = async (dirs) => {
-    const metas = await readMetas(dirs.map((ed) => ed + 'meta.json'));
-    const all = [];
-    metas.forEach((m) => { if (m && Array.isArray(m.builds)) all.push(...m.builds); });
-    return all;
-  };
-  let builds;
+  const ck = `${appId}|${platform}|${e}`;
+  const hit = _buildsCache.get(ck);
+  if (hit && Date.now() - hit.ts < BUILDS_CACHE_TTL) return hit.data.slice();
+  // Real-time enumeration — NEVER via envDirsCached: uploads going through OTHER
+  // instances (e.g. prod while this local emulator serves reads) create env dirs
+  // the in-memory cache cannot see for up to TTL. Correctness over cache here.
+  let envDirs;
   if (platform && e) {
-    builds = (await readEnvMeta(appId, platform, e)).builds.slice();
+    envDirs = [`apps/${appId}/${platform}/${e}/`];
   } else if (platform) {
-    const envDirs = (await envDirsCached()).filter((d) => d.startsWith(`apps/${appId}/${platform}/`));
-    builds = await collect(envDirs);
+    envDirs = await listDirs(`apps/${appId}/${platform}/`);
   } else {
-    const envDirs = (await envDirsCached()).filter((d) => d.startsWith(`apps/${appId}/`));
-    builds = await collect(envDirs);
+    const platformDirs = await listDirs(`apps/${appId}/`);
+    envDirs = [];
+    for (const pd of platformDirs) envDirs.push(...(await listDirs(pd)));
   }
-  return builds.filter((b) => !env || b.env === undefined || normEnv(b.env) === e);
+  const metas = await readMetas(envDirs.map((ed) => ed + 'meta.json'));
+  const all = [];
+  metas.forEach((m) => { if (m && Array.isArray(m.builds)) all.push(...m.builds); });
+  const builds = all.filter((b) => !env || b.env === undefined || normEnv(b.env) === e);
+  _buildsCache.set(ck, { ts: Date.now(), data: builds.slice() });
+  return builds;
 }
 
 // ---- helpers ----
@@ -398,18 +433,33 @@ router.post('/upload-url', requireApiKey, async (req, res) => {
 
 // POST /r2/commit-build — HEAD check, then meta.json next to the file.
 router.post('/commit-build', requireApiKey, async (req, res) => {
+  const body = req.body || {};
+  const { buildKey, appId, platform, version } = body;
+  const env = body.env || '';
+  // Notify on failure too — the uploader may be an unattended CI machine.
+  const notifyFail = async (reason) => {
+    try {
+      const tag = appId || '?';
+      const plat = platform || '?';
+      const en = env || '?';
+      const ver = version || '?';
+      await notifyCliq('\u274C ' + tag + ' upload FAILED (' + plat + '/' + en + ' v' + ver + ')\n' + reason);
+    } catch (e) { /* never block the error response */ }
+  };
   try {
-    const body = req.body || {};
-    const { buildKey, appId, platform, version } = body;
     if (!buildKey || !appId || !platform || !version) {
-      badRequest(res, 'missing parameters: buildKey, appId, platform, version are required');
+      const msg = 'missing parameters: buildKey, appId, platform, version are required';
+      await notifyFail(msg);
+      badRequest(res, msg);
       return;
     }
 
     const fileName = body.fileName || '';
-    const key = body.key || `apps/${appId}/${platform}/${envDir(body.env)}/${buildKey}/${fileName}`;
+    const key = body.key || `apps/${appId}/${platform}/${envDir(env)}/${buildKey}/${fileName}`;
     if (!fileName && !body.key) {
-      badRequest(res, 'fileName or key is required');
+      const msg = 'fileName or key is required';
+      await notifyFail(msg);
+      badRequest(res, msg);
       return;
     }
 
@@ -420,7 +470,9 @@ router.post('/commit-build', requireApiKey, async (req, res) => {
     } catch (error) {
       const name = error?.name || '';
       if (name === 'NotFound' || name === 'NoSuchKey' || error?.$metadata?.httpStatusCode === 404) {
-        badRequest(res, `file not found in R2: ${key}. Upload the file before committing.`);
+        const msg = `file not found in R2: ${key}. Upload the file before committing.`;
+        await notifyFail(msg);
+        badRequest(res, msg);
         return;
       }
       throw error;
@@ -428,8 +480,7 @@ router.post('/commit-build', requireApiKey, async (req, res) => {
 
     const buildCreatedTimestamp = Date.now();
     const doc = {
-      buildKey, appId, platform,
-      env: body.env || '',
+      buildKey, appId, platform, env,
       appName: body.appName || appId,
       bundleIdentifier: body.bundleId || '',
       key,
@@ -443,10 +494,25 @@ router.post('/commit-build', requireApiKey, async (req, res) => {
       updatedAt: buildCreatedTimestamp,
     };
 
-    await appendBuild(appId, platform, body.env, doc);
-    invalidateDirCache(); // a new env dir may have been created
+    await appendBuild(appId, platform, env, doc);
+    invalidateDirCache();
+    invalidateBuildsCache();
+
+    // success notification (best-effort)
+    const dl = `https://pgyer-enhance.web.app/app%2F${encodeURIComponent(appId)}%3Fenv%3D${encodeURIComponent(env)}%26platform%3D${platform}`;
+    const buildNoSuffix = body.buildNumber ? ` (#${body.buildNumber})` : '';
+    try {
+      await notifyCliq([
+        `\uD83D\uDCE6 ${appId} — new build uploaded`,
+        `${platform}/${env}  v${version}${buildNoSuffix}`,
+        `${doc.buildFileName} \u00B7 ${fmtMB(fileSize)}`,
+        `Download: ${dl}`,
+      ].join('\n'));
+    } catch (e) { /* notification must not fail the commit */ }
+
     res.json({ data: doc });
   } catch (error) {
+    await notifyFail(error?.message || 'unknown error');
     serverError(res, error?.message);
   }
 });
@@ -579,7 +645,6 @@ async function findMetaByKey(buildKey) {
   return found;
 }
 
-// GET /r2/install-plist?buildKey= — iOS OTA: sign ipa, regen plist, itms link.
 // GET /r2/install-plist?buildKey=&app=&platform=&env= — iOS OTA: sign ipa, regen plist, itms link.
 router.get('/install-plist', requireApiKey, async (req, res) => {
   try {
@@ -618,7 +683,6 @@ router.get('/install-plist', requireApiKey, async (req, res) => {
   }
 });
 
-// POST /r2/update-build — read-modify-write meta.json (low-frequency admin op).
 // POST /r2/update-build — mutate one build in the env meta (app/platform/env optional).
 router.post('/update-build', requireApiKey, async (req, res) => {
   try {
@@ -642,13 +706,13 @@ router.post('/update-build', requireApiKey, async (req, res) => {
       doc.updatedAt = Date.now();
     });
     if (!result) { serverError(res, 'concurrent update conflict, please retry'); return; }
+    invalidateBuildsCache();
     res.json({ data: { buildKey: body.buildKey, ...updates } });
   } catch (error) {
     serverError(res, error?.message);
   }
 });
 
-// POST /r2/delete-builds — remove build dir (package+icon+meta) + plist.
 // POST /r2/delete-builds — remove builds from env meta + delete physical objects.
 router.post('/delete-builds', requireApiKey, async (req, res) => {
   try {
@@ -679,6 +743,7 @@ router.post('/delete-builds', requireApiKey, async (req, res) => {
       await Promise.all(keys.map((k) =>
         s3.send(new DeleteObjectCommand({ Bucket: R2_BUCKET, Key: k })).catch(() => null)));
       const removed = await removeBuild(found.appId, found.platform, found.env, buildKey);
+      invalidateBuildsCache();
       return { buildKey, deleted: removed.ok };
     }));
     res.json({ deleted: results.filter((r) => r.deleted).length, results });
@@ -824,16 +889,57 @@ router.get('/apps', requireApiKey, async (req, res) => {
       if (parts[3] && parts[3] !== 'none') a.envs[parts[3]] = true;
       builds.forEach((b) => {
         const ts = b.buildCreatedTimestamp || 0;
-        if (!a.latest || ts > a.latest.ts) a.latest = { ts, buildVersion: b.buildVersion || '', env: parts[3] };
+        if (!a.latest || ts > a.latest.ts) a.latest = { ts, buildVersion: b.buildVersion || '', env: parts[3], iconKey: b.iconKey || '' };
       });
     });
-    const apps = [...byApp.values()].map((a) => ({
-      appId: a.appId, builds: a.builds, android: a.android, ios: a.ios,
-      envs: Object.keys(a.envs), latestVersion: a.latest ? a.latest.buildVersion : '',
-      latestAt: a.latest && a.latest.ts ? new Date(a.latest.ts).toISOString() : '',
-    }));
+    const apps = [];
+    for (const a of byApp.values()) {
+      const iconKey = (a.latest && a.latest.iconKey) || ('apps/' + a.appId + '/icon.png');
+      const icon = await objectUrl(iconKey, DOWNLOAD_URL_EXPIRES);
+      apps.push({
+        appId: a.appId, builds: a.builds, android: a.android, ios: a.ios, iconUrl: icon.url,
+        envs: Object.keys(a.envs), latestVersion: a.latest ? a.latest.buildVersion : '',
+        latestAt: a.latest && a.latest.ts ? new Date(a.latest.ts).toISOString() : '',
+      });
+    }
     apps.sort((a, b) => String(b.latestAt).localeCompare(String(a.latestAt)));
     res.json({ count: apps.length, apps });
+  } catch (error) {
+    serverError(res, error?.message);
+  }
+});
+
+// POST /r2/admin-login { password } — console gate. Not behind requireApiKey
+// (it IS the password check). In-memory rate limit: 5 fails per IP -> 60s lock.
+const ADMIN_LOGIN_FAILS = new Map();
+router.post('/admin-login', async (req, res) => {
+  try {
+    const expected = process.env.R2_ADMIN_PASSWORD || '';
+    if (!expected) {
+      res.status(503).json({ error: 'R2_ADMIN_PASSWORD is not configured on the server' });
+      return;
+    }
+    // Prefer the framework-resolved client IP (set by the platform LB);
+    // x-forwarded-for is client-spoofable.
+    const ip = req.ip || (req.headers && (req.headers['x-forwarded-for'] || '').split(',').pop().trim()) || 'unknown';
+    const now = Date.now();
+    const st = ADMIN_LOGIN_FAILS.get(ip) || { count: 0, lockedUntil: 0 };
+    if (st.lockedUntil > now) {
+      res.status(429).json({ error: 'too many attempts, try again in ' + Math.ceil((st.lockedUntil - now) / 1000) + 's' });
+      return;
+    }
+    const pwd = String((req.body || {}).password || '');
+    if (pwd === expected) {
+      ADMIN_LOGIN_FAILS.delete(ip);
+      // Hand the management token to the console so ALL its calls go through
+      // the strong x-api-key channel (web-origin stays for public pages only).
+      res.json({ ok: true, token: R2_API_TOKEN });
+      return;
+    }
+    st.count += 1;
+    if (st.count >= 5) { st.count = 0; st.lockedUntil = now + 60 * 1000; }
+    ADMIN_LOGIN_FAILS.set(ip, st);
+    res.status(401).json({ error: 'wrong password' });
   } catch (error) {
     serverError(res, error?.message);
   }

@@ -16,7 +16,9 @@ let bootstrap = () => {
     .catch(err => console.error(err));
 }
 
-if (w['deviceData']) {
+// /console is an admin page independent of the deviceData gating flow.
+const isConsole = location.pathname.startsWith('/console');
+if (w['deviceData'] || isConsole) {
   bootstrap();
 } else {
   w['bootstrap'] = bootstrap;

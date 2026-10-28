@@ -1,0 +1,148 @@
+<!-- login gate -->
+<div class="login-wrap" *ngIf="!loggedIn">
+  <div class="login-card">
+    <h2>R2 Admin Console</h2>
+    <div class="pwd-row">
+  <input [type]="showPwd ? 'text' : 'password'" [(ngModel)]="password" (keyup.enter)="login()" placeholder="Admin password" autofocus />
+  <button type="button" class="eye" (click)="showPwd = !showPwd" title="{{ showPwd ? 'Hide' : 'Show' }} password">{{ showPwd ? '👁︎' : '👁‍🕶️' }}</button>
+</div>
+    <button class="login-btn" (click)="login()" [disabled]="loggingIn || !password">{{ loggingIn ? 'Checking...' : 'Login' }}</button>
+    <p class="err" *ngIf="loginError">{{ loginError }}</p>
+  </div>
+</div>
+
+<!-- main console -->
+<div class="console" *ngIf="loggedIn">
+  <div class="topbar">
+    <h2>R2 Admin Console</h2>
+    <input class="search" type="text" [(ngModel)]="filterText" placeholder="Search appId / version..." />
+    <button class="primary" (click)="showUpload = !showUpload">{{ showUpload ? 'Close Upload' : '+ Upload' }}</button>
+    <button (click)="refreshApps()">Refresh</button>
+    <button (click)="logout()">Logout</button>
+  </div>
+
+  <!-- upload form -->
+  <div class="upload-panel" *ngIf="showUpload">
+    <h3>Manual Upload</h3>
+    <div class="upload-grid">
+      <label>appId *<input list="appIds" [(ngModel)]="uploadForm.appId" placeholder="e.g. cosmo" />
+        <datalist id="appIds">
+          <option *ngFor="let a of apps" [value]="a.appId"></option>
+        </datalist>
+      </label>
+      <label>platform *
+        <select [(ngModel)]="uploadForm.platform"><option>android</option><option>ios</option></select>
+      </label>
+      <label>env *
+        <input list="envList" [(ngModel)]="uploadForm.env" placeholder="uat / prd" />
+        <datalist id="envList"><option>uat</option><option>prd</option></datalist>
+      </label>
+      <label>version *<input [(ngModel)]="uploadForm.version" placeholder="1.0.0" /></label>
+      <label>buildNumber<input [(ngModel)]="uploadForm.buildNumber" placeholder="100" /></label>
+      <label>bundleId<input [(ngModel)]="uploadForm.bundleId" placeholder="com.example.app" /></label>
+      <label>appName<input [(ngModel)]="uploadForm.appName" placeholder="Display name" /></label>
+      <label>package *<input type="file" accept=".apk,.ipa,.aab" (change)="onFileChange($event)" /></label>
+      <label class="full">description
+        <textarea [(ngModel)]="uploadForm.description" rows="3" placeholder="uat:&#10;Env: uat&#10;what's new..."></textarea>
+      </label>
+    </div>
+    <div class="upload-actions">
+      <button class="primary" (click)="submitUpload()" [disabled]="uploading">{{ uploading ? 'Uploading...' : 'Upload' }}</button>
+      <button (click)="showUpload = false">Cancel</button>
+    </div>
+  </div>
+
+  <!-- apps table -->
+  <p class="hint" *ngIf="loadingApps">loading apps...</p>
+  <p class="hint" *ngIf="!loadingApps && filteredApps.length === 0">No apps.</p>
+
+  <div class="table-scroll"><table class="apps-table" *ngIf="filteredApps.length">
+    <thead>
+      <tr><th></th><th>App</th><th>Platforms</th><th>Envs</th><th>Builds</th><th>Latest</th><th>Updated</th><th></th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let a of filteredApps; trackBy: trackByAppId" class="app-row" [class.open]="expandedApp === a.appId" (click)="toggleApp(a.appId)">
+        <td><img class="app-icon" [src]="a.iconUrl" (error)="onIconErr($event)" /></td>
+        <td class="app-id">{{ a.appId }}</td>
+        <td>{{ (a.android ? 'a:' + a.android : '') }}{{ a.android && a.ios ? ' ' : '' }}{{ a.ios ? 'i:' + a.ios : '' }}</td>
+        <td>
+          <span class="badge" *ngFor="let e of a.envs">{{ e }}</span>
+        </td>
+        <td>{{ a.builds }}</td>
+        <td>{{ a.latestVersion }}</td>
+        <td>{{ fmtTime(a.latestAt) }}</td>
+        <td><button class="toggle-btn">{{ expandedApp === a.appId ? 'Collapse' : 'Versions' }}</button></td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <!-- versions of expanded app -->
+  <div class="versions" *ngIf="expandedApp">
+    <div class="versions-head">
+      <h3>{{ expandedApp }} — versions</h3>
+      <button *ngIf="selectedCount > 0" class="danger" (click)="deleteSelected()">Delete selected ({{ selectedCount }})</button>
+    </div>
+    <p class="hint" *ngIf="loadingVersions">loading versions...</p>
+
+        <div *ngFor="let g of groupedVersions" class="env-group">
+      <div class="env-head" (click)="toggleEnv(g.env)">
+        <span class="chev">{{ collapsedEnvs[g.env] ? '▸' : '▾' }}</span>
+        <span class="env-name">{{ g.env }}</span>
+        <span class="badge">{{ g.total }} build(s)</span>
+        <span class="env-latest">{{ fmtTime(g.latest) }}</span>
+      </div>
+      <ng-container *ngIf="!collapsedEnvs[g.env]">
+        <div *ngFor="let p of g.platforms" class="plat-group">
+          <div class="plat-head">
+            <label class="ck-all" title="Select all in this group">
+              <input type="checkbox" [checked]="isPlatformAllSelected(p.items)" (change)="toggleSelectPlatform(p.items)" />
+            </label>
+            <span class="plat-name">{{ p.platform }} · {{ p.items.length }}</span>
+            <button class="site-btn" (click)="openDownloadPage(expandedApp, g.env, p.platform)">Download site ↗</button>
+          </div>
+          <div class="table-scroll">
+          <table class="ver-table">
+            <thead>
+              <tr><th class="ck"></th><th></th><th>Version</th><th>Description</th><th>Size</th><th>Created</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let v of p.items; trackBy: trackByBuildKey">
+                <td class="ck"><input type="checkbox" [(ngModel)]="selectedKeys[v.buildKey]" /></td>
+                <td><img class="ver-icon" [src]="v.iconUrl" (error)="onIconErr($event)" /></td>
+                <td>{{ v.buildVersion }} <small *ngIf="v.buildVersionNo">(#{{ v.buildVersionNo }})</small></td>
+                <td class="desc">{{ (v.buildUpdateDescription || '').split('\n')[0] }}</td>
+                <td>{{ fmtSize(v.buildFileSize) }}</td>
+                <td>{{ fmtTime(v.buildCreatedTimestamp) }}</td>
+                <td class="acts">
+                  <button (click)="download(v)">Download</button>
+                  <button (click)="toggleMeta(v)">Meta</button>
+                  <button (click)="startEdit(v)">Edit</button>
+                  <button class="danger" (click)="deleteBuilds([v])">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+          <ng-container *ngFor="let v of p.items; trackBy: trackByBuildKey">
+            <div class="meta-panel" *ngIf="v.showMeta">
+              <h5>meta.json — {{ v.buildKey }}</h5>
+              <pre>{{ v | json }}</pre>
+            </div>
+            <div class="edit-panel" *ngIf="v.showEdit && editingBuild === v">
+              <h5>Edit — {{ v.buildVersion }} ({{ v.buildKey }})</h5>
+              <div class="upload-grid">
+                <label>description<textarea [(ngModel)]="editForm.description" rows="3"></textarea></label>
+                <label>appName<input [(ngModel)]="editForm.appName" /></label>
+                <label>bundleId<input [(ngModel)]="editForm.bundleId" [disabled]="true" /></label>
+                <label>buildNumber<input [(ngModel)]="editForm.buildNumber" [disabled]="true" /></label>
+              </div>
+              <div class="upload-actions">
+                <button class="primary" (click)="saveEdit()">Save</button>
+                <button (click)="v.showEdit = false">Cancel</button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+</div>

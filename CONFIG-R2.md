@@ -124,6 +124,45 @@ chmod 600 ~/.jj-cli/r2.json
 - `envs` 非空且当前环境在列表内 → **R2**；不在列表内 → **pgyer**
 - `j upload`、`j payer-nextversion` 两个命令都按同一规则分流，**命令行参数零变化**
 
+## 二A、上传 Cliq 通知（成功 + 失败，服务端统一发）
+
+### 获取 Webhook URL（Zoho Cliq 官方步骤）
+
+1. 打开 Zoho Cliq → 左下角头像旁 → **Bots & Tools**（不是频道设置）
+2. 进入 **Webhook Tokens** 模块（需通过 2FA 双因素验证，会话 15 分钟有效）
+3. 点击 **Generate New Token**（每用户最多 5 个 token；生成后可重命名/启停/查看调用历史）
+4. 点击该 token → **Get Webhook URL** → 选择 **Channels** → 选目标频道 → 复制完整 URL
+   （形如 `https://cliq.zoho.com/api/v2/channelsbyname/{频道名}/message?zapikey={token}`）
+5. 验证（频道收到 test 即 OK）：curl -X POST URL -H Content-Type:application/json -d 请求体 {"text":"test"}
+
+### 配置（两个位置，职责不同）
+
+**① functions 服务端（主通道：所有上传的成功 + commit 失败通知）**
+
+```bash
+# functions/.env（部署生效；覆盖 jj-cli / console / 任何 API 上传）
+R2_CLIQ_WEBHOOK=https://cliq.zoho.com/api/v2/channelsbyname/xxx/message?zapikey=yyy
+```
+
+**② jj-cli 客户端（补充通道：仅"commit 之前"的失败——版本解析 / upload-url / PUT 直传失败）**
+
+```bash
+# 环境变量（CI）或 ~/.jj-cli/r2.json（本机，与 token 同文件）：
+{ "token": "<R2_API_TOKEN>", "cliqWebhook": "https://cliq.zoho.com/..." }
+```
+
+### 通知矩阵（谁发什么，无重复）
+
+| 场景 | 通知方 | 消息示例 |
+|---|---|---|
+| 上传成功（任何途径） | functions | 📦 cosmo — new build uploaded（版本/大小/下载链接） |
+| commit 失败（文件缺失/参数错/meta 冲突） | functions | ❌ cosmo upload FAILED (android/uat v1.0) + 原因 |
+| 版本解析失败（jj-cli） | jj-cli | ❌ cosmo upload FAILED at version-parsing + 原因 |
+| upload-url / PUT 直传失败（jj-cli） | jj-cli | ❌ cosmo upload FAILED at upload + 原因 |
+| console 手动上传失败 | 无通知（操作者当场看到 alert） | — |
+
+失败不影响主流程：通知失败只打警告，上传结果不受影响。
+
 ## 三、Cloudflare 控制台（管理员一次性）
 
 完整步骤见 `functions/R2-SETUP.md` 第二节，速记：建私有 bucket → 建 Object Read & Write 且**仅限该 bucket** 的 API Token（拿 Access Key/Secret）→ 记 Account ID → 配 bucket CORS（`AllowedOrigins` 填 `https://pgyer-enhance.web.app` 和 `http://localhost:4200`）。

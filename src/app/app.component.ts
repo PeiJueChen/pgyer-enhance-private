@@ -20,7 +20,12 @@ export class AppComponent {
   versionsLoaded = false;
   appName = "loading...";
   version = environment.version;
+  isAdminConsole = location.pathname.startsWith('/console');
   constructor(private dataService: DataService, public appDataService: AppDataService, public p: Platform) {
+    if (this.isAdminConsole) {
+      // Admin console is a standalone page: skip deviceConfig / QR init.
+      return;
+    }
     if (!Object['fromEntries']) {
       Object['fromEntries'] = this.fromEntries;
     }
