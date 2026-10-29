@@ -439,19 +439,26 @@ router.post('/commit-build', requireApiKey, async (req, res) => {
   const { buildKey, appId, platform, version } = body;
   const env = body.env || '';
   // Notify on failure too — the uploader may be an unattended CI machine.
-  const notifyFail = async (reason) => {
+  const notifyFail = async (stage, reason) => {
     try {
-      const tag = appId || '?';
-      const plat = platform || '?';
-      const en = env || '?';
+      const tag = appId || " ? ";
+      const plat = String(platform || '?').toLowerCase() === 'ios' ? 'iOS' : 'Android';
+      const en = String(env || " ? ").toUpperCase();
       const ver = version || '?';
-      await notifyCliq('\u274C ' + tag + ' upload FAILED (' + plat + '/' + en + ' v' + ver + ')\n' + reason);
+      const msg = [
+        "**\uD83D\uDD34 " + tag + " — upload failed**",
+        "`" + plat + " \u00B7 " + en + " \u00B7 v" + ver + "`",
+        "",
+        "**Stage:** " + stage,
+        "**Reason:** `" + String(reason || "unknown").slice(0, 200) + "`",
+      ].join("\n");
+      await notifyCliq(msg);
     } catch (e) { /* never block the error response */ }
-  };
+};
   try {
     if (!buildKey || !appId || !platform || !version) {
       const msg = 'missing parameters: buildKey, appId, platform, version are required';
-      await notifyFail(msg);
+      await notifyFail('commit \u00B7 validation', msg);
       badRequest(res, msg);
       return;
     }
@@ -460,7 +467,7 @@ router.post('/commit-build', requireApiKey, async (req, res) => {
     const key = body.key || `apps/${appId}/${platform}/${envDir(env)}/${buildKey}/${fileName}`;
     if (!fileName && !body.key) {
       const msg = 'fileName or key is required';
-      await notifyFail(msg);
+      await notifyFail('commit \u00B7 validation', msg);
       badRequest(res, msg);
       return;
     }
@@ -473,7 +480,7 @@ router.post('/commit-build', requireApiKey, async (req, res) => {
       const name = error?.name || '';
       if (name === 'NotFound' || name === 'NoSuchKey' || error?.$metadata?.httpStatusCode === 404) {
         const msg = `file not found in R2: ${key}. Upload the file before committing.`;
-        await notifyFail(msg);
+        await notifyFail('commit \u00B7 validation', msg);
         badRequest(res, msg);
         return;
       }
@@ -502,19 +509,22 @@ router.post('/commit-build', requireApiKey, async (req, res) => {
 
     // success notification (best-effort)
     const dl = `https://pgyer-enhance.web.app/app%2F${encodeURIComponent(appId)}%3Fenv%3D${encodeURIComponent(env)}%26platform%3D${platform}`;
-    const buildNoSuffix = body.buildNumber ? ` (#${body.buildNumber})` : '';
+        const buildNoSuffix = body.buildNumber ? ` (#${body.buildNumber})` : '';
+    const platLabel = String(platform).toLowerCase() === 'ios' ? 'iOS' : 'Android';
+    const envLabel = String(env || '-').toUpperCase();
+    const ts = formatDateTime(buildCreatedTimestamp);
     try {
-      await notifyCliq([
-        `\uD83D\uDCE6 ${appId} — new build uploaded`,
-        `${platform}/${env}  v${version}${buildNoSuffix}`,
-        `${doc.buildFileName} \u00B7 ${fmtMB(fileSize)}`,
-        `Download: ${dl}`,
-      ].join('\n'));
+      const head = "**\uD83D\uDCE6 " + appId + " — new build**";
+      const tags = "`" + platLabel + " \u00B7 " + envLabel + "` \u00B7 `v" + version + buildNoSuffix + "`";
+      const file = "**File:** `" + doc.buildFileName + "` (" + fmtMB(fileSize) + ")";
+      const time = "**Time:** " + ts;
+      const link = "**[\uD83D\uDD17 Open download page](" + dl + ")**";
+      await notifyCliq([head + " \u00B7 " + tags, file, time, link].join("\n"));
     } catch (e) { /* notification must not fail the commit */ }
 
     res.json({ data: doc });
   } catch (error) {
-    await notifyFail(error?.message || 'unknown error');
+    await notifyFail('commit', error?.message || 'unknown error');
     serverError(res, error?.message);
   }
 });
@@ -524,7 +534,7 @@ router.get('/versions', requireApiKey, async (req, res) => {
   try {
     const query = req.query || {};
     if (!query.appId) { badRequest(res, 'missing parameter: appId'); return; }
-    const builds = await loadBuilds(query.appId, query.platform || '', query.env || '', query.fresh === '1');
+    const builds = await loadBuilds(query.appId, platParam || '', query.env || '', query.fresh === '1');
     builds.sort((a, b) => (b.buildCreatedTimestamp || 0) - (a.buildCreatedTimestamp || 0));
     const withIcons = await Promise.all(builds.map(async (v) => {
       const iconKey = v.iconKey || ('apps/' + v.appId + '/icon.png');
@@ -562,11 +572,13 @@ function compareBuildsDesc(a, b) {
 router.get('/next-version', requireApiKey, async (req, res) => {
   try {
     const query = req.query || {};
+    // platform=all -> scan BOTH platforms in one request (one loadBuilds fan-out).
+    const platParam = query.platform === 'all' ? '' : query.platform;
     if (!query.appId || !query.platform) {
       badRequest(res, 'missing parameters: appId, platform');
       return;
     }
-    const builds = await loadBuilds(query.appId, query.platform, query.env || '');
+    const builds = await loadBuilds(query.appId, platParam, query.env || '');
     builds.sort(compareBuildsDesc);
     if (builds.length === 0) {
       res.json({ appId: query.appId, platform: query.platform, env: query.env || '',
@@ -574,9 +586,21 @@ router.get('/next-version', requireApiKey, async (req, res) => {
       return;
     }
     const latest = builds[0];
-    const parts = String(latest.buildVersion || '1.0.0').split('.');
-    const lastPart = parseInt(parts[parts.length - 1], 10);
-    parts[parts.length - 1] = String((Number.isNaN(lastPart) ? 0 : lastPart) + 1);
+    // Same bump rule as jj-cli: env containing prd bumps MINOR and zeroes
+    // patch (1.2.3 -> 1.3.0); otherwise patch + 1 with 100-carry.
+    const parts = String(latest.buildVersion || '1.0.0').split('.').map(Number);
+    while (parts.length < 3) parts.push(0);
+    if (String(query.env || '').toLowerCase().includes('prd')) {
+      parts[1] += 1;
+      parts[2] = 0;
+    } else {
+      parts[2] += 1;
+      if (parts[2] >= 100) {
+        parts[2] = 0;
+        parts[1] += 1;
+        if (parts[1] >= 100) { parts[1] = 0; parts[0] += 1; }
+      }
+    }
     res.json({ appId: query.appId, platform: query.platform, env: query.env || '',
       currentVersion: latest.buildVersion || null,
       currentBuildNumber: latest.buildVersionNo || null,
