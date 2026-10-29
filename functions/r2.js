@@ -243,11 +243,13 @@ function invalidateBuildsCache() { _buildsCache.clear(); }
 
 /** Load all builds of an app/platform(+env): real-time dir enumeration,
  *  ONE meta.json GET per env (no cross-instance stale cache involved). */
-async function loadBuilds(appId, platform, env) {
+async function loadBuilds(appId, platform, env, skipCache) {
   const e = normEnv(env);
   const ck = `${appId}|${platform}|${e}`;
-  const hit = _buildsCache.get(ck);
-  if (hit && Date.now() - hit.ts < BUILDS_CACHE_TTL) return hit.data.slice();
+  if (!skipCache) {
+    const hit = _buildsCache.get(ck);
+    if (hit && Date.now() - hit.ts < BUILDS_CACHE_TTL) return hit.data.slice();
+  }
   // Real-time enumeration — NEVER via envDirsCached: uploads going through OTHER
   // instances (e.g. prod while this local emulator serves reads) create env dirs
   // the in-memory cache cannot see for up to TTL. Correctness over cache here.
@@ -522,7 +524,7 @@ router.get('/versions', requireApiKey, async (req, res) => {
   try {
     const query = req.query || {};
     if (!query.appId) { badRequest(res, 'missing parameter: appId'); return; }
-    const builds = await loadBuilds(query.appId, query.platform || '', query.env || '');
+    const builds = await loadBuilds(query.appId, query.platform || '', query.env || '', query.fresh === '1');
     builds.sort((a, b) => (b.buildCreatedTimestamp || 0) - (a.buildCreatedTimestamp || 0));
     const withIcons = await Promise.all(builds.map(async (v) => {
       const iconKey = v.iconKey || ('apps/' + v.appId + '/icon.png');

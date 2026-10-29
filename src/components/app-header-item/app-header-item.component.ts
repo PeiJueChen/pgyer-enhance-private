@@ -64,7 +64,10 @@ export class AppHeaderItemComponent implements OnInit {
           }
           window.open(url, '_blank');
         }
-        setTimeout(() => { this.item.isDownloading = false; }, 6000);
+        setTimeout(() => {
+          alert("The app is downloading, please check your phone. If download failed, please click the try again button.");
+          this.item.isDownloading = false;
+        }, 6000);
       } catch (error: any) {
         this.item.isDownloading = false;
         this.dataService.showAlert('Error', error?.message);

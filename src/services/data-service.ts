@@ -227,10 +227,10 @@ export class DataService {
     return rsp?.apps || [];
   }
 
-  /** ALL versions of an app (no platform/env filter -> backend fan-out). */
-  async getAppVersions(appId: string): Promise<any[]> {
+  /** ALL versions of an app. fresh=true bypasses the 60s server cache (read-after-write). */
+  async getAppVersions(appId: string, fresh?: boolean): Promise<any[]> {
     const url = this.getHost() + "/r2/versions";
-    const rsp: any = await this.getPromise(url + `?t=${Date.now()}`, { appId }, this.withAdmin());
+    const rsp: any = await this.getPromise(url + `?t=${Date.now()}` + (fresh ? '&fresh=1' : ''), { appId }, this.withAdmin());
     return rsp?.versions || [];
   }
 

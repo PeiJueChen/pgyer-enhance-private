@@ -26,9 +26,14 @@ export class AdminConsoleComponent implements OnInit, OnDestroy {
   loadingVersions = false;
   selectedKeys: { [buildKey: string]: boolean } = {};
   collapsedEnvs: { [env: string]: boolean } = {};
+  // Bumped every time fresh list data lands, so the memoized groupedVersions
+  // recomputes even when the row COUNT is unchanged (e.g. after editing a description).
+  versionsStamp: { [appId: string]: number } = {};
 
   // ---- edit form ----
   editingBuild: any = null;
+  saving = false;
+  deleting = false;
   editForm: any = {};
 
   // ---- upload form ----
@@ -119,13 +124,14 @@ export class AdminConsoleComponent implements OnInit, OnDestroy {
     await this.loadVersions(appId);
   }
 
-  async loadVersions(appId: string) {
+  async loadVersions(appId: string, fresh?: boolean) {
     this.loadingVersions = true;
     try {
-      const list = await this.dataService.getAppVersions(appId);
+      const list = await this.dataService.getAppVersions(appId, fresh);
       // group key for rendering: platform + env
       list.forEach(v => { v._group = `${v.platform} / ${v.env || 'none'}`; });
       this.versionsByApp[appId] = list;
+      this.versionsStamp[appId] = Date.now();
     } catch (e: any) {
       alert('Failed to load versions: ' + (e?.message || e));
     } finally {
@@ -139,7 +145,7 @@ export class AdminConsoleComponent implements OnInit, OnDestroy {
   private _groupedKey = '';
   get groupedVersions(): { env: string, total: number, latest: number, platforms: { platform: string, items: any[] }[] }[] {
     const appKey = this.expandedApp || '';
-    const key = appKey + '|' + this.filterText + '|' + (this.versionsByApp[appKey] ? this.versionsByApp[appKey].length : 0);
+    const key = appKey + '|' + this.filterText + '|' + (this.versionsStamp[appKey] || 0);
     if (key === this._groupedKey) return this._groupedCache;
     this._groupedKey = key;
     const list = this.versionsByApp[appKey] || [];
@@ -200,7 +206,8 @@ export class AdminConsoleComponent implements OnInit, OnDestroy {
 
   async saveEdit() {
     const v = this.editingBuild;
-    if (!v) return;
+    if (!v || this.saving) return;
+    this.saving = true;
     try {
       // unified service call (carries admin token)
       await this.dataService.r2UpdateBuildFull(v, v.appId, this.editForm.description, {
@@ -209,16 +216,21 @@ export class AdminConsoleComponent implements OnInit, OnDestroy {
         buildNumber: this.editForm.buildNumber || undefined,
       });
       v.showEdit = false;
-      if (this.expandedApp) await this.loadVersions(this.expandedApp);
+      if (this.expandedApp) await this.loadVersions(this.expandedApp, true);
     } catch (e: any) {
       alert('Update failed: ' + (e?.message || e));
+    } finally {
+      this.saving = false;
     }
   }
 
   async deleteBuilds(items: any[]) {
-    if (items.length === 0) return;
+    if (items.length === 0 || this.deleting) return;
     const names = items.map(v => `${v.buildVersion}(${v.buildKey})`).join('\n');
     if (!confirm(`Delete ${items.length} build(s)?\n${names}`)) return;
+    // Set the busy flag only AFTER the user confirms — a cancel must not leave
+    // the flag stuck at true (it would permanently disable all delete buttons).
+    this.deleting = true;
     try {
       // console deletes by buildKey only — backend scans to locate them
       const rsp: any = await this.dataService.r2DeleteBuildsByKeys(items.map(v => v.buildKey));
@@ -226,9 +238,12 @@ export class AdminConsoleComponent implements OnInit, OnDestroy {
         alert(`Deleted ${rsp?.deleted || 0}/${items.length} — refresh to see the actual state.`);
       }
       this.selectedKeys = {};
-      await Promise.all([this.loadVersions(this.expandedApp!), this.refreshApps()]);
+      if (this.expandedApp) await this.loadVersions(this.expandedApp, true);
+      await this.refreshApps();
     } catch (e: any) {
       alert('Delete failed: ' + (e?.message || e));
+    } finally {
+      this.deleting = false;
     }
   }
 
