@@ -534,7 +534,7 @@ router.get('/versions', requireApiKey, async (req, res) => {
   try {
     const query = req.query || {};
     if (!query.appId) { badRequest(res, 'missing parameter: appId'); return; }
-    const builds = await loadBuilds(query.appId, platParam || '', query.env || '', query.fresh === '1');
+    const builds = await loadBuilds(query.appId, query.platform || '', query.env || '', query.fresh === '1');
     builds.sort((a, b) => (b.buildCreatedTimestamp || 0) - (a.buildCreatedTimestamp || 0));
     const withIcons = await Promise.all(builds.map(async (v) => {
       const iconKey = v.iconKey || ('apps/' + v.appId + '/icon.png');
