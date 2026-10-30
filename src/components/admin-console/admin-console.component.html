@@ -118,15 +118,16 @@
       </div>
       <ng-container *ngIf="!collapsedEnvs[g.env]">
         <div *ngFor="let p of g.platforms" class="plat-group">
-          <div class="plat-head">
+          <div class="plat-head" (click)="togglePlat(g.env, p.platform)">
             <label class="ck-all" title="Select all in this group">
               <input type="checkbox" [checked]="isPlatformAllSelected(p.items)"
                 (change)="toggleSelectPlatform(p.items)" />
             </label>
+            <span class="chev">{{ collapsedPlats[g.env + '|' + p.platform] ? '▸' : '▾' }}</span>
             <span class="plat-name">{{ p.platform }} · {{ p.items.length }}</span>
             <button class="site-btn" (click)="openDownloadPage(expandedApp, g.env, p.platform)">Download site ↗</button>
           </div>
-          <div class="table-scroll">
+          <div class="table-scroll" *ngIf="!collapsedPlats[g.env + '|' + p.platform]">
             <table class="ver-table">
               <thead>
                 <tr>
@@ -157,6 +158,7 @@
               </tbody>
             </table>
           </div>
+          <ng-container *ngIf="!collapsedPlats[g.env + '|' + p.platform]">
           <ng-container *ngFor="let v of p.items; trackBy: trackByBuildKey">
             <div class="meta-panel" *ngIf="v.showMeta">
               <h5>meta.json — {{ v.buildKey }}</h5>
@@ -175,6 +177,7 @@
                 <button (click)="v.showEdit = false">Cancel</button>
               </div>
             </div>
+          </ng-container>
           </ng-container>
         </div>
       </ng-container>

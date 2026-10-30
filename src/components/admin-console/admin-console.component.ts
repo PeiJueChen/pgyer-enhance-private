@@ -26,6 +26,8 @@ export class AdminConsoleComponent implements OnInit, OnDestroy {
   loadingVersions = false;
   selectedKeys: { [buildKey: string]: boolean } = {};
   collapsedEnvs: { [env: string]: boolean } = {};
+  // platform-group collapse state, keyed env|platform (survives memo recompute)
+  collapsedPlats: { [key: string]: boolean } = {};
   // Bumped every time fresh list data lands, so the memoized groupedVersions
   // recomputes even when the row COUNT is unchanged (e.g. after editing a description).
   versionsStamp: { [appId: string]: number } = {};
@@ -314,6 +316,7 @@ export class AdminConsoleComponent implements OnInit, OnDestroy {
   }
 
   toggleEnv(e: string) { this.collapsedEnvs[e] = !this.collapsedEnvs[e]; }
+  togglePlat(e: string, p: string) { const k = e + "|" + p; this.collapsedPlats[k] = !this.collapsedPlats[k]; }
 
   /** Open the public download page for this app/env/platform in a new tab (same origin). */
   openDownloadPage(appId: string, env: string, platform: string) {
