@@ -144,13 +144,14 @@
                 <tr *ngFor="let v of p.items; trackBy: trackByBuildKey">
                   <td class="ck"><input type="checkbox" [(ngModel)]="selectedKeys[v.buildKey]" /></td>
                   <td><img class="ver-icon" [src]="v.iconUrl" (error)="onIconErr($event)" /></td>
-                  <td>{{ v.buildVersion }} <small *ngIf="v.buildVersionNo">(#{{ v.buildVersionNo }})</small></td>
+                  <td>{{ v.buildVersion }} <small *ngIf="v.buildVersionNo">(#{{ v.buildVersionNo }})</small> <span class="dl-badge" title="Downloads">⬇ {{ v.downloadCount ?? '...' }}</span></td>
                   <td class="desc">{{ (v.buildUpdateDescription || '').split('\n')[0] }}</td>
                   <td>{{ fmtSize(v.buildFileSize) }}</td>
                   <td>{{ fmtTime(v.buildCreatedTimestamp) }}</td>
                   <td class="acts">
                     <button (click)="download(v)">Download</button>
                     <button (click)="toggleMeta(v)">Meta</button>
+                    <button (click)="toggleStats(v)" [disabled]="statsLoadingKey === v.buildKey">{{ statsLoadingKey === v.buildKey ? '...' : 'Stats' }}</button>
                     <button (click)="startEdit(v)">Edit</button>
                     <button class="danger" (click)="deleteBuilds([v])" [disabled]="deleting">{{ deleting ? 'Deleting...' : 'Delete' }}</button>
                   </td>
@@ -160,6 +161,26 @@
           </div>
           <ng-container *ngIf="!collapsedPlats[g.env + '|' + p.platform]">
           <ng-container *ngFor="let v of p.items; trackBy: trackByBuildKey">
+            <div class="stats-panel" *ngIf="v.showStats && v.statsData">
+              <h5>Downloads — {{ v.buildVersion }} ({{ v.buildKey }})</h5>
+              <div class="stats-summary">
+                <span class="stats-total">Total: <b>{{ v.statsData.total || 0 }}</b></span>
+                <span class="cc" *ngFor="let c of countryChips(v.statsData)">{{ c.k }} × {{ c.n }}</span>
+              </div>
+              <div class="table-scroll"><table class="stats-table">
+                <thead><tr><th>Time</th><th>IP</th><th>Country</th><th>City</th><th>Device</th></tr></thead>
+                <tbody>
+                  <tr *ngFor="let r of v.statsData.rows">
+                    <td>{{ fmtTime(r.ts) }}</td>
+                    <td>{{ r.ip }}</td>
+                    <td>{{ r.country }}</td>
+                    <td>{{ r.city }}</td>
+                    <td class="ua">{{ shortUa(r.ua) }}</td>
+                  </tr>
+                  <tr *ngIf="!(v.statsData.rows || []).length"><td colspan="5" class="hint">No downloads yet.</td></tr>
+                </tbody>
+              </table></div>
+            </div>
             <div class="meta-panel" *ngIf="v.showMeta">
               <h5>meta.json — {{ v.buildKey }}</h5>
               <pre>{{ v | json }}</pre>

@@ -134,6 +134,7 @@ export class AdminConsoleComponent implements OnInit, OnDestroy {
       list.forEach(v => { v._group = `${v.platform} / ${v.env || 'none'}`; });
       this.versionsByApp[appId] = list;
       this.versionsStamp[appId] = Date.now();
+      this.fillDownloadCounts(appId); // async, does not block
     } catch (e: any) {
       alert('Failed to load versions: ' + (e?.message || e));
     } finally {
@@ -332,6 +333,41 @@ export class AdminConsoleComponent implements OnInit, OnDestroy {
 
   isPlatformAllSelected(items: any[]): boolean {
     return items.length > 0 && items.every(v => this.selectedKeys[v.buildKey]);
+  }
+
+  /** Lazily fill download badges after versions load (never blocks the list). */
+  async fillDownloadCounts(appId: string) {
+    try {
+      const counts = await this.dataService.getDownloadCounts(appId);
+      const list = this.versionsByApp[appId] || [];
+      list.forEach(v => { v.downloadCount = counts[v.buildKey] || 0; });
+    } catch (e) { /* badges stay silent */ }
+  }
+
+  statsLoadingKey: string | null = null;
+  async toggleStats(v: any) {
+    if (v.showStats) { v.showStats = false; return; }
+    v.showMeta = false; v.showEdit = false;
+    this.statsLoadingKey = v.buildKey;
+    try {
+      v.statsData = await this.dataService.getDownloadStats(v.appId, v.platform, v.env || '', v.buildKey);
+      v.showStats = true;
+    } catch (e: any) {
+      alert('Stats failed: ' + (e?.message || e));
+    } finally {
+      this.statsLoadingKey = null;
+    }
+  }
+
+  countryChips(stats: any): { k: string, n: number }[] {
+    const by = (stats && stats.byCountry) || {};
+    return Object.entries(by).map(([k, n]) => ({ k, n: Number(n) })).sort((a, b) => b.n - a.n);
+  }
+
+  shortUa(ua: string): string {
+    const s = String(ua || '');
+    const m = s.match(/\(([^)]+)\)/);
+    return (m ? m[1] : s).slice(0, 48);
   }
 
   trackByAppId(_: number, a: any) { return a.appId; }

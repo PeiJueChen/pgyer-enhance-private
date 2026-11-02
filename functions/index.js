@@ -16,6 +16,12 @@ const r2Router = require('./r2');
 
 const app = express();
 
+// Cloud Functions sit behind Google's LB: without this, req.ip is the LB's
+// internal address (x-forwarded-for is never parsed) — download stats would
+// log proxy IPs and the admin-login rate limiter would bucket ALL users into
+// one shared "IP".
+app.set('trust proxy', true);
+
 const isPrd = process.env?.NODE_ENV != 'development';
 
 const whitelist = ['https://pgyer-enhance.web.app'];
@@ -47,7 +53,7 @@ app.use('/', async (req, res, next) => {
   const r2ApiKeyPaths = [
     '/r2/upload-url', '/r2/commit-build', '/r2/update-build', '/r2/delete-builds',
     '/r2/next-version', '/r2/versions', '/r2/download-url', '/r2/install-plist',
-    '/r2/merged-versions', '/r2/apps', '/r2/admin-login', '/r2/health',
+    '/r2/merged-versions', '/r2/apps', '/r2/admin-login', '/r2/download-counts', '/r2/download-stats', '/r2/health',
   ];
   if (r2ApiKeyPaths.includes(req.path)) {
     next();

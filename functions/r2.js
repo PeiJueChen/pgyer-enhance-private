@@ -85,6 +85,38 @@ async function notifyCliq(text) {
 }
 
 const fmtMB = (bytes) => ((Number(bytes) || 0) / 1024 / 1024).toFixed(1) + ' MB';
+// ---- download statistics (dl.json per build) ----
+const DL_FILE = 'dl.json';
+const DL_MAX_ROWS = 1000;
+
+// Record one download row into {buildDir}/dl.json. Read-modify-write with
+// verify (same discipline as meta writes). Awaited by callers: gen1 freezes
+// the process after the response is sent, fire-and-forget would be lost.
+// `total` accumulates forever; `rows` keeps only the last DL_MAX_ROWS entries.
+async function recordDownload(buildDir, req) {
+  if (!buildDir) return;
+  const h = req.headers || {};
+  const row = {
+    ts: Date.now(),
+    ip: req.ip || String(h['x-forwarded-for'] || '').split(',').pop().trim() || 'unknown',
+    country: String(h['x-appengine-country'] || '').toUpperCase() || '??',
+    city: String(h['x-appengine-city'] || ''),
+    ua: String(h['user-agent'] || '').slice(0, 180),
+  };
+  for (let i = 0; i < 2; i++) {
+    const cur = (await readMeta(buildDir + DL_FILE)) || { rows: [] };
+    if (!Array.isArray(cur.rows)) cur.rows = [];
+    // Legacy files without total: seed from the rows we still have.
+    const total = (typeof cur.total === 'number' ? cur.total : cur.rows.length) + 1;
+    cur.rows.push(row);
+    if (cur.rows.length > DL_MAX_ROWS) cur.rows = cur.rows.slice(-DL_MAX_ROWS);
+    await writeMeta(buildDir + DL_FILE, { updatedAt: Date.now(), total, rows: cur.rows });
+    const verify = await readMeta(buildDir + DL_FILE);
+    if (verify && Array.isArray(verify.rows) && verify.rows.length >= cur.rows.length
+      && typeof verify.total === 'number' && verify.total >= total) return;
+  }
+}
+
 // ---- meta storage (R2 based) ----
 const metaKeyOf = (appId, platform, env, buildKey) => `apps/${appId}/${platform}/${envDir(env)}/${buildKey}/${META_FILE}`;
 
@@ -168,7 +200,8 @@ async function findBuildByKey(buildKey, appId, platform, env) {
   if (appId && platform && env) {
     const meta = await readEnvMeta(appId, platform, env);
     const b = meta.builds.find((x) => x.buildKey === buildKey);
-    return b ? { build: b, appId, platform, env: normEnv(env) } : null;
+    // dir = canonical build directory (recordDownload target; iOS plist counting)
+    return b ? { build: b, appId, platform, env: normEnv(env), dir: `apps/${appId}/${platform}/${envDir(env)}/${buildKey}/` } : null;
   }
   const scan = async () => {
     const envDirs = await envDirsCached();
@@ -176,7 +209,7 @@ async function findBuildByKey(buildKey, appId, platform, env) {
     for (let i = 0; i < envDirs.length; i++) {
       const parts = envDirs[i].replace(/\/$/, '').split('/'); // [apps, appId, platform, env]
       const b = metas[i] && metas[i].builds && metas[i].builds.find((x) => x.buildKey === buildKey);
-      if (b) return { build: b, appId: parts[1], platform: parts[2], env: parts[3] };
+      if (b) return { build: b, appId: parts[1], platform: parts[2], env: parts[3], dir: envDirs[i] + buildKey + '/' };
     }
     return null;
   };
@@ -623,6 +656,10 @@ router.get('/download-url', requireApiKey, async (req, res) => {
     if (!expires || expires <= 0) expires = DOWNLOAD_URL_EXPIRES;
     if (expires > MAX_DOWNLOAD_URL_EXPIRES) expires = MAX_DOWNLOAD_URL_EXPIRES;
     const result = await objectUrl(key, expires);
+    // Count this download (best-effort; never block the link on failure).
+    try {
+      await recordDownload(key.slice(0, key.lastIndexOf('/') + 1), req);
+    } catch (e) { console.warn('dl count failed:', e && e.message); }
     res.json({ key, ...result });
   } catch (error) {
     serverError(res, error?.message);
@@ -703,7 +740,8 @@ router.get('/install-plist', requireApiKey, async (req, res) => {
 
     const plistResult = await objectUrl(plistKey, PLIST_URL_EXPIRES);
     const itmsUrl = 'itms-services://?action=download-manifest&url=' + encodeURIComponent(plistResult.url);
-    res.json({ buildKey: q.buildKey, ipaUrl: ipa.url, plistUrl: plistResult.url, itmsUrl, public: plistResult.public });
+      try { await recordDownload(found.dir, req); } catch (e) { console.warn('dl count failed:', e && e.message); }
+  res.json({ buildKey: q.buildKey, ipaUrl: ipa.url, plistUrl: plistResult.url, itmsUrl, public: plistResult.public });
   } catch (error) {
     serverError(res, error?.message);
   }
@@ -770,6 +808,7 @@ router.post('/delete-builds', requireApiKey, async (req, res) => {
         s3.send(new DeleteObjectCommand({ Bucket: R2_BUCKET, Key: k })).catch(() => null)));
       const removed = await removeBuild(found.appId, found.platform, found.env, buildKey);
       invalidateBuildsCache();
+      _dlCountsCache.clear(); // download badges must not show deleted builds
       return { buildKey, deleted: removed.ok };
     }));
     res.json({ deleted: results.filter((r) => r.deleted).length, results });
@@ -966,6 +1005,71 @@ router.post('/admin-login', async (req, res) => {
     if (st.count >= 5) { st.count = 0; st.lockedUntil = now + 60 * 1000; }
     ADMIN_LOGIN_FAILS.set(ip, st);
     res.status(401).json({ error: 'wrong password' });
+  } catch (error) {
+    serverError(res, error?.message);
+  }
+});
+
+// GET /r2/download-counts?appId=&platform= — per-build download totals (60s cache).
+const DL_COUNTS_TTL = 60 * 1000;
+const _dlCountsCache = new Map();
+router.get('/download-counts', requireApiKey, async (req, res) => {
+  try {
+    const q = req.query || {};
+    if (!q.appId) { badRequest(res, 'missing parameter: appId'); return; }
+    const ck = q.appId + '|' + (q.platform || '');
+    const hit = _dlCountsCache.get(ck);
+    if (hit && Date.now() - hit.ts < DL_COUNTS_TTL) { res.json({ counts: hit.counts }); return; }
+    // Enumerate build dirs (real-time, same as loadBuilds) then read each dl.json.
+    let envDirs;
+    if (q.platform) {
+      envDirs = await listDirs(`apps/${q.appId}/${q.platform}/`);
+    } else {
+      const platformDirs = await listDirs(`apps/${q.appId}/`);
+      envDirs = [];
+      for (const pd of platformDirs) envDirs.push(...(await listDirs(pd)));
+    }
+    const allBuildDirs = [];
+    for (const ed of envDirs) {
+      const bds = await listDirs(ed);
+      bds.forEach((bd) => allBuildDirs.push(bd));
+    }
+    const dls = await readMetas(allBuildDirs.map((bd) => bd + DL_FILE));
+    const counts = {};
+    allBuildDirs.forEach((bd, i) => {
+      const bk = bd.replace(/\/$/, '').split('/').pop();
+      const dl = dls[i];
+      // Cumulative total (survives the 1000-row cap); legacy files fall back to rows.
+      counts[bk] = (dl && typeof dl.total === 'number') ? dl.total
+        : (dl && Array.isArray(dl.rows)) ? dl.rows.length : 0;
+    });
+    _dlCountsCache.set(ck, { ts: Date.now(), counts });
+    res.json({ counts });
+  } catch (error) {
+    serverError(res, error?.message);
+  }
+});
+
+// GET /r2/download-stats?app=&platform=&env=&buildKey= — detail rows + byCountry.
+router.get('/download-stats', requireApiKey, async (req, res) => {
+  try {
+    const q = req.query || {};
+    if (!q.app || !q.platform || !q.env || !q.buildKey) {
+      badRequest(res, 'missing parameters: app, platform, env, buildKey');
+      return;
+    }
+    const dir = `apps/${q.app}/${q.platform}/${envDir(q.env)}/${q.buildKey}/`;
+    const dl = await readMeta(dir + DL_FILE);
+    const rows = (dl && Array.isArray(dl.rows)) ? dl.rows : [];
+    // Cumulative total (never truncated); legacy files fall back to rows length.
+    const total = (dl && typeof dl.total === 'number') ? dl.total : rows.length;
+    const byCountry = {};
+    rows.forEach((r) => { const c = r.country || '??'; byCountry[c] = (byCountry[c] || 0) + 1; });
+    res.json({
+      total,
+      byCountry,
+      rows: rows.slice(-500).reverse(),
+    });
   } catch (error) {
     serverError(res, error?.message);
   }

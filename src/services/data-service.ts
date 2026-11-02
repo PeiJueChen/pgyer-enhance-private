@@ -248,6 +248,21 @@ export class DataService {
     }, this.withAdmin());
   }
 
+  /** Per-build download totals (batch, for the version badges). */
+  async getDownloadCounts(appId: string): Promise<any> {
+    const url = this.getHost() + "/r2/download-counts";
+    const rsp: any = await this.getPromise(url + `?t=${Date.now()}`, { appId }, this.withAdmin());
+    return rsp?.counts || {};
+  }
+
+  /** Download detail rows + byCountry for one build. */
+  async getDownloadStats(app: string, platform: string, env: string, buildKey: string): Promise<any> {
+    const url = this.getHost() + "/r2/download-stats";
+    const rsp: any = await this.getPromise(url + `?t=${Date.now()}` +
+      `&app=${app}&platform=${platform}&env=${env}&buildKey=${buildKey}`, {}, this.withAdmin());
+    return rsp || {};
+  }
+
   /** Step 1 of manual upload: presigned PUT url + buildKey. */
   async requestUploadUrl(params: any): Promise<any> {
     const url = this.getHost() + "/r2/upload-url";
