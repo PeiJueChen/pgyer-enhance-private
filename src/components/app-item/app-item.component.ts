@@ -180,6 +180,9 @@ export class AppItemComponent implements OnInit {
   async installApp(item) {
     // R2 builds: fetch a signed url first (Android) or itms-services link (iOS).
     if (item?.isR2) {
+      // Re-entry guard: signing is async with no visible feedback — a second
+      // tap before the URL arrives would record another download.
+      if (item.isDownloading) return;
       try {
         item.isDownloading = true;
         if (this.appDataService.platform === 'ios') {
