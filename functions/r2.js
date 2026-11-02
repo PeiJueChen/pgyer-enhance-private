@@ -84,7 +84,12 @@ async function notifyCliq(text) {
   } catch (error) { console.warn('cliq notify failed:', error?.message); }
 }
 
-const fmtMB = (bytes) => ((Number(bytes) || 0) / 1024 / 1024).toFixed(1) + ' MB';
+// Cliq renders a fenced code block as plain monospace text with a one-tap copy
+// button, so the whole message copies as ONE block and carries no markdown
+// noise (** / ` / []). A dashed separator closes the block at the bottom.
+const CLIQ_SEPARATOR = '------------------------------------------';
+const cliqBlock = (lines) => ['```', ...lines, CLIQ_SEPARATOR, '```'].join('\n');
+
 // ---- download statistics (dl.json per build) ----
 const DL_FILE = 'dl.json';
 const DL_MAX_ROWS = 1000;
@@ -472,26 +477,26 @@ router.post('/commit-build', requireApiKey, async (req, res) => {
   const { buildKey, appId, platform, version } = body;
   const env = body.env || '';
   // Notify on failure too — the uploader may be an unattended CI machine.
-  const notifyFail = async (stage, reason) => {
+  const notifyFail = async (reason) => {
     try {
       const tag = appId || " ? ";
       const plat = String(platform || '?').toLowerCase() === 'ios' ? 'iOS' : 'Android';
       const en = String(env || " ? ").toUpperCase();
-      const ver = version || '?';
-      const msg = [
-        "**\uD83D\uDD34 " + tag + " — upload failed**",
-        "`" + plat + " \u00B7 " + en + " \u00B7 v" + ver + "`",
-        "",
-        "**Stage:** " + stage,
-        "**Reason:** `" + String(reason || "unknown").slice(0, 200) + "`",
-      ].join("\n");
+      const ver = version ? 'v' + version : '?';
+      const msg = cliqBlock([
+        "\uD83D\uDD34 " + tag + " — upload failed",
+        "Platform : " + plat,
+        "Env      : " + en,
+        "Version  : " + ver,
+        "Reason   : " + String(reason || "unknown").slice(0, 200),
+      ]);
       await notifyCliq(msg);
     } catch (e) { /* never block the error response */ }
 };
   try {
     if (!buildKey || !appId || !platform || !version) {
       const msg = 'missing parameters: buildKey, appId, platform, version are required';
-      await notifyFail('commit \u00B7 validation', msg);
+      await notifyFail(msg);
       badRequest(res, msg);
       return;
     }
@@ -500,7 +505,7 @@ router.post('/commit-build', requireApiKey, async (req, res) => {
     const key = body.key || `apps/${appId}/${platform}/${envDir(env)}/${buildKey}/${fileName}`;
     if (!fileName && !body.key) {
       const msg = 'fileName or key is required';
-      await notifyFail('commit \u00B7 validation', msg);
+      await notifyFail(msg);
       badRequest(res, msg);
       return;
     }
@@ -513,7 +518,7 @@ router.post('/commit-build', requireApiKey, async (req, res) => {
       const name = error?.name || '';
       if (name === 'NotFound' || name === 'NoSuchKey' || error?.$metadata?.httpStatusCode === 404) {
         const msg = `file not found in R2: ${key}. Upload the file before committing.`;
-        await notifyFail('commit \u00B7 validation', msg);
+        await notifyFail(msg);
         badRequest(res, msg);
         return;
       }
@@ -547,17 +552,19 @@ router.post('/commit-build', requireApiKey, async (req, res) => {
     const envLabel = String(env || '-').toUpperCase();
     const ts = formatDateTime(buildCreatedTimestamp);
     try {
-      const head = "**\uD83D\uDCE6 " + appId + " — new build**";
-      const tags = "`" + platLabel + " \u00B7 " + envLabel + "` \u00B7 `v" + version + buildNoSuffix + "`";
-      const file = "**File:** `" + doc.buildFileName + "` (" + fmtMB(fileSize) + ")";
-      const time = "**Time:** " + ts;
-      const link = "**[\uD83D\uDD17 Open download page](" + dl + ")**";
-      await notifyCliq([head + " \u00B7 " + tags, file, time, link].join("\n"));
+      await notifyCliq(cliqBlock([
+        "\uD83D\uDCE6 " + appId + " — new build",
+        "Platform : " + platLabel,
+        "Env      : " + envLabel,
+        "Version  : v" + version + buildNoSuffix,
+        "Time     : " + ts,
+        "Download : " + dl,
+      ]));
     } catch (e) { /* notification must not fail the commit */ }
 
     res.json({ data: doc });
   } catch (error) {
-    await notifyFail('commit', error?.message || 'unknown error');
+    await notifyFail(error?.message || 'unknown error');
     serverError(res, error?.message);
   }
 });
